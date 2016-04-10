@@ -12,4 +12,34 @@
     tools:context="com.example.danyatazyeen.orderofoperations.StartScreen"
     tools:showIn="@layout/activity_start">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/startView"
+            android:layout_gravity="center"
+            android:src="@drawable/start_screen_bg"
+            android:scaleType="centerCrop"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/startButton"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@null"
+            android:src="@drawable/start_btn"/>
+
+        <ImageView
+            android:layout_width="243dp"
+            android:layout_height="222dp"
+            android:id="@+id/titleView"
+            android:background="@null"
+            android:src="@drawable/title"
+            android:layout_gravity="center" />
+    </FrameLayout>
 </RelativeLayout>
