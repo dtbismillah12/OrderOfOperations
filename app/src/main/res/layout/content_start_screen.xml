@@ -24,7 +24,9 @@
             android:id="@+id/startView"
             android:layout_gravity="center"
             android:src="@drawable/start_screen_bg"
-            android:scaleType="centerCrop"/>
+            android:orientation="vertical"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="false" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -32,7 +34,8 @@
             android:id="@+id/startButton"
             android:layout_gravity="center_horizontal|bottom"
             android:background="@null"
-            android:src="@drawable/start_btn"/>
+            android:src="@drawable/start_btn"
+            android:layout_marginBottom="50dp" />
 
         <ImageView
             android:layout_width="243dp"
@@ -40,6 +43,7 @@
             android:id="@+id/titleView"
             android:background="@null"
             android:src="@drawable/title"
-            android:layout_gravity="center" />
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="100dp" />
     </FrameLayout>
 </RelativeLayout>
