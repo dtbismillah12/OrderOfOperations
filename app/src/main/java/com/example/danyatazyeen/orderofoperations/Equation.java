@@ -26,6 +26,9 @@ public class Equation {
         operands = new ArrayList<OperandGenerator>();
     }
 
+    //sets the number of operands given in the equation depending how far the player has gotten in the game
+    //if they have advanced at least ten rounds, parentheses will randomly be thrown into the equation
+    // @param: levelsPassed gives how many rounds the player has passed
     public Equation(int levelsPassed){
         this();
         if(levelsPassed>10){

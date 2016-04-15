@@ -14,6 +14,7 @@ public class OperandGenerator implements Comparable<OperandGenerator>{
     private int operandPriority;
     private int indexInEquation;
 
+    //sets a priority to each operand
     public OperandGenerator(){
         random = new Random();
         operandIndex = random.nextInt(5);
@@ -39,6 +40,7 @@ public class OperandGenerator implements Comparable<OperandGenerator>{
         return operandPriority;
     }
 
+    //sets priority to each operand within parentheses once an initial priority is assigned in OperandGenerator()
     public void operandInParentheses(){
         if(operandIndex<3){
             operandPriority = 1;
