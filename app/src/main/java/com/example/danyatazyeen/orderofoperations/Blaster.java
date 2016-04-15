@@ -22,4 +22,38 @@ public class Blaster {
         shooting = false;
         rectangle = new RectF();
     }
+
+//    public void update(long fps){
+//        if(heading == UP){
+//            //y = y - speed / fps;
+//        }else{
+//            //y = y + speed / fps;
+//        }
+//        rectangle.left = x;
+//        rectangle.right = x + width;
+//        rectangle.top = y;
+//        rectangle.bottom = y + height;
+//
+//    }
+
+    public RectF getRect(){
+        return  rectangle;
+    }
+
+    public boolean getStatus(){
+        return shooting;
+    }
+
+    public void setInactive(){
+        shooting = false;
+    }
+
+//    public float getImpactPointY(){
+//        if (heading == DOWN){
+//            return y + height;
+//        }else{
+//            return  y;
+//        }
+//
+//    }
 }
