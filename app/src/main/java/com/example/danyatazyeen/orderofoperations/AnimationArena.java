@@ -7,18 +7,24 @@ import android.graphics.Canvas;
  */
 
 import android.graphics.Canvas;
+
 public class AnimationArena {
 
-        private Spaceship ship;
+        private static Spaceship ship;
         private static int nextOpenSlot;
 
+
         public AnimationArena () {
-            //INSTANTIATE THE BALL
-            ship = new Spaceship();
+            //INSTANTIATE THE SHIP
+           // ship = new Spaceship();
         }
 
         public void update (int width, int height) {
-            //ship.move(0, 0, width, height, allBalls);
+            ship.move(0, 0, width, height);
+        }
+
+        public static void updateVelo(int accelX, int accelY){
+                ship.updateVelo(-1 * accelX, accelY);
         }
 
         public void draw (Canvas canvas) {
