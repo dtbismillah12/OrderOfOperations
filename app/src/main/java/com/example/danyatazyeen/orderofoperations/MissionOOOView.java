@@ -2,14 +2,20 @@ package com.example.danyatazyeen.orderofoperations;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.widget.RelativeLayout;
 
 /**
  * Created by danyatazyeen on 4/16/16.
  */
-public class MissionOOOView {
+public class MissionOOOView extends SurfaceView implements Runnable{
     Context context;
+    RelativeLayout background;
 
     // This is our thread
     private Thread gameThread = null;
@@ -76,7 +82,7 @@ public class MissionOOOView {
 //    // When did we last play a menacing sound
 //    private long lastMenaceTime = System.currentTimeMillis();
 
-    public SpaceInvadersView(Context context, int x, int y){
+    public MissionOOOView(Context context, int x, int y) {
         super(context);
         this.context = context;
         ourHolder = getHolder();
@@ -85,7 +91,7 @@ public class MissionOOOView {
         screenLength = y;
     }
 
-    private void prepareLevel(){
+    private void prepareLevel() {
 
         // Here we will initialize all the game objects
 
@@ -99,6 +105,116 @@ public class MissionOOOView {
 
         // Build the shelters
 
+    }
+
+    public void run() {
+        while (playing) {
+
+            // Capture the current time in milliseconds in startFrameTime
+            long startFrameTime = System.currentTimeMillis();
+
+            // Update the frame
+            if (!paused) {
+                update();
+            }
+
+            // Draw the frame
+            draw();
+
+            // Calculate the fps this frame
+            // We may use this if we want to add animation
+            timeThisFrame = System.currentTimeMillis() - startFrameTime;
+            if (timeThisFrame >= 1) {
+                fps = 1000 / timeThisFrame;
+            }
+
+            // We will do something new here towards the end of the project
+
+        }
+    }
+    private void update() {
+
+        // If the ship hits an obstacle, this is true. Otherwise, false.
+        boolean bumped = false;
+
+        // True if player has lost
+        boolean lost = false;
+
+        if(lost){
+            prepareLevel();
+        }
+
+        // Update the players bullet
+
+        // Has the player's bullet hit the top of the screen
+
+        // Has an alien bullet hit the bottom of the screen
+
+        // Has the player's bullet hit an invader
+
+        // Has an alien bullet hit the player ship
+    }
+
+    private void draw(){
+        // Make sure our drawing surface is valid or we crash
+        if (ourHolder.getSurface().isValid()) {
+            // Lock the canvas ready to draw
+            canvas = ourHolder.lockCanvas();
+
+            // Draw the player spaceship
+
+            // Draw the invaders
+
+            // Draw the players bullet if active
+
+            // Draw the alien's bullets if active
+
+            // Draw the score and remaining lives
+            // Change the brush color
+            paint.setColor(Color.argb(255, 249, 129, 0));
+            paint.setTextSize(40);
+            canvas.drawText("Score: " + score + "   Lives: " + lives, 10,50, paint);
+
+            // Draw everything to the screen
+            ourHolder.unlockCanvasAndPost(canvas);
+        }
+    }
+
+    //Stops thread if MainActivity is stopped
+    public void pause() {
+        playing = false;
+        try {
+            gameThread.join();
+        } catch (InterruptedException e) {
+            Log.e("Error:", "joining thread");
+        }
+
+    }
+
+    //Starts thread when MainActivity started
+    public void resume() {
+        playing = true;
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+
+    // Overriding SurfaceView class's onTouchListener
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+
+            // Player has touched the screen
+            case MotionEvent.ACTION_DOWN:
+
+                break;
+
+            // Player has removed finger from screen
+            case MotionEvent.ACTION_UP:
+
+                break;
+        }
+        return true;
     }
 }
 
