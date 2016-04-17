@@ -8,13 +8,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 /**
  * Created by danyatazyeen on 4/16/16.
  */
-public class MissionOOOView extends SurfaceView implements Runnable{
+public class MissionView extends SurfaceView implements Runnable{
     Context context;
     RelativeLayout background;
 
@@ -47,7 +46,6 @@ public class MissionOOOView extends SurfaceView implements Runnable{
 
     // The players ship
     private Spaceship playerShip;
-    private ImageButton player;
 
     // The player's bullet
     private Blaster bullet;
@@ -68,23 +66,7 @@ public class MissionOOOView extends SurfaceView implements Runnable{
     private int lives = 3;
 
 
-//    // For sound FX
-//    private SoundPool soundPool;
-//    private int playerExplodeID = -1;
-//    private int invaderExplodeID = -1;
-//    private int shootID = -1;
-//    private int damageShelterID = -1;
-//    private int uhID = -1;
-//    private int ohID = -1;
-//
-//    // How menacing should the sound be?
-//    private long menaceInterval = 1000;
-//    // Which menace sound should play next
-//    private boolean uhOrOh;
-//    // When did we last play a menacing sound
-//    private long lastMenaceTime = System.currentTimeMillis();
-
-    public MissionOOOView(Context context, int x, int y) {
+    public MissionView(Context context, int x, int y) {
         super(context);
         this.context = context;
         ourHolder = getHolder();
@@ -95,8 +77,7 @@ public class MissionOOOView extends SurfaceView implements Runnable{
 
     private void prepareLevel() {
 
-        //initialize player's spaceship
-        playerShip = new Spaceship(context, screenWidth, screenLength);
+        // Here we will initialize all the game objects
 
         // Prepare the players bullet
 
@@ -158,21 +139,15 @@ public class MissionOOOView extends SurfaceView implements Runnable{
 
     private void draw(){
 
-        player = (ImageButton) findViewById(R.id.shipView);
         // Make sure our drawing surface is valid or we crash
         if (ourHolder.getSurface().isValid()) {
             // Lock the canvas ready to draw
             canvas = ourHolder.lockCanvas();
 
             //Draw the space background
-
+            background.findViewById(R.id.BGView);
 
             // Draw the player spaceship
-
-            //player = (ImageButton) findViewById(R.id);
-//            if(playerShip.getBitmap() != null) {
-//                canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), screenLength - 50, paint);
-//            }
 
             // Draw the invaders
 

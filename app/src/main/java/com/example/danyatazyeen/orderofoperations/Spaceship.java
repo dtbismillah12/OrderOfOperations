@@ -3,7 +3,9 @@ package com.example.danyatazyeen.orderofoperations;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.graphics.Paint;
 
 /**
  * Created by danyatazyeen on 4/6/16.
@@ -21,6 +23,7 @@ public class Spaceship {
     private float heightShip;
     private float yShipTop;
     public static float frameTime = 0.666f;
+    private Paint paint;
 
     public Spaceship(Context context, int screenX, int screenY){
         rectangle = new RectF();
@@ -60,6 +63,9 @@ public class Spaceship {
         }
     }
 
+    public Bitmap getBitmap(){
+        return bitmap;
+    }
 
     public int getX(){
         return x;
@@ -74,6 +80,10 @@ public class Spaceship {
         // according to acceleration measurements from accelerometer
         velX += (accelX*frameTime);
         velY += (accelY*frameTime);
+    }
+
+    public void draw(Canvas canvas,int screenWidth, int screenLength) {
+        canvas.drawBitmap(bitmap, x, screenLength - 50, paint);
     }
 
 }
