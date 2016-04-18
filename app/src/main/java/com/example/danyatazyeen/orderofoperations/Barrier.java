@@ -17,9 +17,7 @@ public class Barrier {
 
         isVisible = true;
 
-        // Sometimes a bullet slips through this padding.
-        // Set padding to zero if this annoys you
-        int brickPadding = 1;
+        int brickPadding = 0;
         // The number of shelters
         int shelterPadding = screenX / 9;
         int startHeight = screenY - (screenY /8 * 2);
