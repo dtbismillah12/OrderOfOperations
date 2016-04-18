@@ -23,18 +23,18 @@ public class AnimationArena {
                 playerShip = new Spaceship(context, 150, 107);
         }
 
-        public void update (int width, int height) {
-            playerShip.move(0, 0, width, height);
-        }
-
-        public static void updateVelo(int accelX, int accelY){
-                playerShip.updateVelo(-1 * accelX, accelY);
-        }
-
-        public void draw (Canvas canvas) {
-            //WIPE THE CANVAS CLEAN
-            playerShip.draw(canvas, screenWidth, screenLength);
-
-        }
+//        public void update (int width, int height) {
+//            playerShip.move(0, 0, width, height);
+//        }
+//
+//        public static void updateVelo(int accelX, int accelY){
+//                playerShip.updateVelo(-1 * accelX, accelY);
+//        }
+//
+//        public void draw (Canvas canvas) {
+//            //WIPE THE CANVAS CLEAN
+//            playerShip.draw(canvas, screenWidth, screenLength);
+//
+//        }
 
 }
