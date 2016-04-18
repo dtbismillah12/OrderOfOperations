@@ -109,4 +109,8 @@ public class Equation {
         }
         return properOrder.toString();
     }
+
+    public boolean correctEquation(){
+        return operandOrder.isEmpty();
+    }
 }
