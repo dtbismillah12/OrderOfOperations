@@ -134,7 +134,7 @@ public class UFO {
 
         y = y + height;
 
-        shipSpeed = shipSpeed * 1.18f;
+        shipSpeed = shipSpeed * .5f;
     }
 
     public boolean takeAim(float playerShipX, float playerShipLength){
