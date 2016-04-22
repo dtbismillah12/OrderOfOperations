@@ -69,7 +69,7 @@ public class Asteroid {
 
         int padding = screenX / 25;
 
-        x = 0;
+        x = screenY/2;
         y = 0;
 
         // Initialize the bitmap
