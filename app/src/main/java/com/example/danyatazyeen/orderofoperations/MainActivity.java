@@ -16,7 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 
-public class MainActivity extends Activity implements SensorEventListener {
+public class MainActivity extends Activity implements SensorEventListener{
 
     // spaceInvadersView will be the view of the game
     // It will also hold the logic of the game

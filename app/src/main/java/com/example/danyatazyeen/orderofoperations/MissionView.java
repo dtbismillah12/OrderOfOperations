@@ -549,4 +549,12 @@ public class MissionView extends SurfaceView implements Runnable{
         }
         return true;
     }
+
+    public void changeShipDirection(int xAccel){
+        if(xAccel>0){
+            playerShip.setMovementState(playerShip.RIGHT);
+        } else {
+            playerShip.setMovementState(playerShip.LEFT);
+        }
+    }
 }
