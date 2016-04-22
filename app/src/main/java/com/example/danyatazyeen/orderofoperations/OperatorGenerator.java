@@ -15,10 +15,9 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
     private int operatorIndex;
     private int operatorPriority;
     private int indexInEquation;
-    private Color operatorColor;
 
     //sets a priority to each operand
-    public OperatorGenerator(){
+    public OperatorGenerator(int levelsPassed){
         random = new Random();
         operatorIndex = random.nextInt(5);
         currentOperand = operands[operatorIndex];
@@ -27,15 +26,21 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
         } else {
             operatorPriority = 4;
         }
-        indexInEquation = random.nextInt(4);
+        if(levelsPassed>10){
+            indexInEquation = random.nextInt(4);
+        } else if(levelsPassed>5){
+            indexInEquation = random.nextInt(3);
+        } else {
+            indexInEquation = random.nextInt(2);
+        }
     }
 
-    public OperatorGenerator(int index){
-        this();
+    public OperatorGenerator(int levelsPassed, int index){
+        this(levelsPassed);
         indexInEquation = index;
     }
 
-    public String getOperand(){
+    public String getOperator(){
         return currentOperand;
     }
 
@@ -44,7 +49,7 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
     }
 
     //sets priority to each operand within parentheses once an initial priority is assigned in OperandGenerator()
-    public void operandInParentheses(){
+    public void operatorInParentheses(){
         if(operatorIndex <3){
             operatorPriority = 1;
         } else {

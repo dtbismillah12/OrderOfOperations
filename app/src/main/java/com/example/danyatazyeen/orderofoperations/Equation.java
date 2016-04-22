@@ -13,29 +13,29 @@ public class Equation {
     private Random rand;
     private StringBuilder equation;
     private boolean containsParentheses;
-    private int numOfOperands;
-    private Queue<OperandGenerator> operandOrder;
-    private ArrayList<OperandGenerator> operands;
+    private int numOfOperators;
+    private Queue<OperatorGenerator> operatorOrder;
+    private ArrayList<OperatorGenerator> operators;
 
     public Equation(){
         rand = new Random();
         equation = new StringBuilder();
         containsParentheses = false;
-        numOfOperands = 2;
-        operandOrder = new LinkedList<OperandGenerator>();
-        operands = new ArrayList<OperandGenerator>();
+        numOfOperators = 2;
+        operatorOrder = new LinkedList<OperatorGenerator>();
+        operators = new ArrayList<OperatorGenerator>();
     }
 
-    //sets the number of operands given in the equation depending how far the player has gotten in the game
+    //sets the number of operators given in the equation depending how far the player has gotten in the game
     //if they have advanced at least ten rounds, parentheses will randomly be thrown into the equation
     // @param: levelsPassed gives how many rounds the player has passed
     public Equation(int levelsPassed){
         this();
         if(levelsPassed>10){
-            numOfOperands = 4;
+            numOfOperators = 4;
             containsParentheses = rand.nextBoolean();
         } else if(levelsPassed>5){
-            numOfOperands = 3;
+            numOfOperators = 3;
         }
         constructEquation();
         createProperOperandOrder();
@@ -52,7 +52,7 @@ public class Equation {
 
     private void constructEquation(){
         equation.append(rand.nextInt(10));
-        for(int i = 1; i<=numOfOperands; i++){
+        for(int i = 1; i<= numOfOperators; i++){
             addTerm(i-1);
         }
         if(containsParentheses){
@@ -61,9 +61,9 @@ public class Equation {
     }
 
     private void addTerm(int index){
-        OperandGenerator genOperand = new OperandGenerator(index);
-        operands.add(genOperand);
-        equation.append(genOperand.getOperand());
+        OperatorGenerator genOperator = new OperatorGenerator(index);
+        operators.add(genOperator);
+        equation.append(genOperator.getOperator());
         equation.append(rand.nextInt(10));
     }
 
@@ -79,13 +79,13 @@ public class Equation {
         equation.insert(possibleCloseIndexes[indexOfClose], ")");
 
         for(int i = possibleOpenIndexes[indexOfOpen]/2; i<(possibleCloseIndexes[indexOfClose]/2)-1; i++){
-            operands.get(i).operandInParentheses();
+            operators.get(i).operatorInParentheses();
         }
     }
 
     public boolean isCorrectOperand(String operand, int index){
-        if(operandOrder.peek().getOperand().equals(operand) && operandOrder.peek().getIndex() == index){
-            operandOrder.poll();
+        if(operatorOrder.peek().getOperator().equals(operand) && operatorOrder.peek().getIndex() == index){
+            operatorOrder.poll();
             return true;
         } else {
             return false;
@@ -93,24 +93,24 @@ public class Equation {
     }
 
     private void createProperOperandOrder(){
-        Collections.sort(operands);
-        for(int i=0; i<operands.size(); i++){
-            operandOrder.offer(operands.get(i));
+        Collections.sort(operators);
+        for(int i=0; i< operators.size(); i++){
+            operatorOrder.offer(operators.get(i));
         }
     }
 
     public String properOrderString(){
         StringBuilder properOrder = new StringBuilder();
-        while(!operandOrder.isEmpty()){
-            properOrder.append(operandOrder.peek().getOperand());
+        while(!operatorOrder.isEmpty()){
+            properOrder.append(operatorOrder.peek().getOperator());
             properOrder.append(",");
-            properOrder.append(operandOrder.poll().getIndex());
+            properOrder.append(operatorOrder.poll().getIndex());
             properOrder.append("\n");
         }
         return properOrder.toString();
     }
 
     public boolean correctEquation(){
-        return operandOrder.isEmpty();
+        return operatorOrder.isEmpty();
     }
 }

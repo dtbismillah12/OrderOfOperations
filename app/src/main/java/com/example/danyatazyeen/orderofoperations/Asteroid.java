@@ -8,11 +8,13 @@ package com.example.danyatazyeen.orderofoperations;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.RectF;
 
 import java.util.Random;
 
 public class Asteroid {
+    private final float[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.MAGENTA};
 
     RectF rect;
 
