@@ -70,6 +70,9 @@ public class MissionView extends SurfaceView implements Runnable{
     private Barrier[] bricks = new Barrier[400];
     private int numBricks;
 
+    //
+    private Asteroid asteroid;
+
     // For sound FX
     private SoundPool soundPool;
     private int playerExplodeID = -1;
@@ -155,6 +158,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
         // Make a new player space ship
         playerShip = new Spaceship(context, screenX, screenY);
+        asteroid = new Asteroid(context, screenX, screenY, 5);
 
         // Prepare the players bullet
         bullet = new Blaster(screenY);
@@ -435,12 +439,16 @@ public class MissionView extends SurfaceView implements Runnable{
             //bitmap.(R.drawable.space_bg);
 
             // Choose the brush color for drawing
-            paint.setColor(Color.argb(255,  255, 255, 255));
+            paint.setColor(Color.argb(255, 255, 255, 255));
 
             // Now draw the player spaceship
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), screenY - 50, paint);
+            canvas.drawBitmap(asteroid.getBitmap(), asteroid.getX(), asteroid.getY(), paint);
+            paint.setColor(Color.argb(255, 249, 129, 0));
+            paint.setTextSize(40);
+            canvas.drawText(asteroid.getAsteroidOperator().getOperator(), asteroid.getX() + (asteroid.getWidth() / 4), asteroid.getY() + (asteroid.getHeight() / 2) + 10, paint);
 
-
+            paint.setColor(Color.argb(255, 255, 255, 255));
             // Draw the invaders
             for(int i = 0; i < numInvaders; i++){
                 if(invaders[i].getVisibility()) {
@@ -553,8 +561,10 @@ public class MissionView extends SurfaceView implements Runnable{
     public void changeShipDirection(int xAccel){
         if(xAccel>0){
             playerShip.setMovementState(playerShip.RIGHT);
-        } else {
+        } else if (xAccel<0){
             playerShip.setMovementState(playerShip.LEFT);
+        } else {
+            playerShip.setMovementState(playerShip.STOPPED);
         }
     }
 }

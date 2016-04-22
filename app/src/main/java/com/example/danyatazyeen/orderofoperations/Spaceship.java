@@ -30,6 +30,8 @@ public class Spaceship {
     // This will hold the pixels per second speedthat the paddle will move
     private float shipSpeed;
 
+    private int screenWidth;
+
     // Which ways can the paddle move
     public final int STOPPED = 0;
     public final int LEFT = 1;
@@ -61,6 +63,8 @@ public class Spaceship {
 
         // How fast is the spaceship in pixels per second
         shipSpeed = 350;
+
+        screenWidth = screenX;
     }
 
     public RectF getRect(){
@@ -92,10 +96,16 @@ public class Spaceship {
     public void update(long fps){
         if(shipMoving == LEFT){
             x = x - shipSpeed / fps;
+            if(x<=0){
+                x = 0;
+            }
         }
 
         if(shipMoving == RIGHT){
             x = x + shipSpeed / fps;
+            if(x>=screenWidth-length){
+                x=screenWidth-length;
+            }
         }
 
         // Update rect which is used to detect hits

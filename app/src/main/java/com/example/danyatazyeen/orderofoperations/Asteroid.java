@@ -49,11 +49,10 @@ public class Asteroid {
 
     /**
      * Constructor of the Asteroid class
-     * @param operation is the operation value from the expression assigned to the asteroid
      * @param screenX is the width of the screen
      * @param screenY is the height of the screen
      */
-    public Asteroid(Context context, String operation, int screenX, int screenY, int levelsPassed){
+    public Asteroid(Context context, int screenX, int screenY, int levelsPassed){
 
         //Initialize Operator Generator
         generator = new OperatorGenerator(levelsPassed);
@@ -69,19 +68,52 @@ public class Asteroid {
 
         int padding = screenX / 25;
 
-        x = screenY/2;
+        x = screenX/2;
         y = 0;
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid);
+
+        bitmap = Bitmap.createScaledBitmap(bitmap,
+                (int) (length),
+                (int) (height),
+                false);
+
+        /*
         Canvas canvas = new Canvas();
         canvas.drawBitmap(bitmap, x, y, null);
         Paint paint = new Paint();
         paint.setColor(colors[generator.getIndex()]);
         paint.setTextSize(10);
         paint.setAntiAlias(true);
-        canvas.drawText(operator, x+10, y+10, paint);
+        canvas.drawText(operator, x + 10, y + 10, paint);
+        */
 
     }
+
+    public OperatorGenerator getAsteroidOperator(){
+        return generator;
+    }
+
+    public float getX(){
+        return x;
+    }
+
+    public float getY(){
+        return y;
+    }
+
+    public float getWidth(){
+        return length;
+    }
+
+    public float getHeight(){
+        return height;
+    }
+
+    public Bitmap getBitmap(){
+        return bitmap;
+    }
+
 }
 
