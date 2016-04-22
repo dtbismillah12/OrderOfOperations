@@ -1,7 +1,5 @@
 package com.example.danyatazyeen.orderofoperations;
 
-import android.graphics.Color;
-
 import java.util.Random;
 
 /**
@@ -11,7 +9,7 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
     private final String[] operands = {"%", "/", "x", "-", "+"};
 
     private Random random;
-    private String currentOperand;
+    private String currentOperator;
     private int operatorIndex;
     private int operatorPriority;
     private int indexInEquation;
@@ -20,7 +18,7 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
     public OperatorGenerator(int levelsPassed){
         random = new Random();
         operatorIndex = random.nextInt(5);
-        currentOperand = operands[operatorIndex];
+        currentOperator = operands[operatorIndex];
         if(operatorIndex <3){
             operatorPriority = 3;
         } else {
@@ -41,7 +39,7 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
     }
 
     public String getOperator(){
-        return currentOperand;
+        return currentOperator;
     }
 
     public int getOperatorPriority(){
@@ -58,8 +56,8 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
     }
 
     @Override
-    public int compareTo(OperatorGenerator otherOperand) {
-        return operatorPriority - otherOperand.getOperatorPriority();
+    public int compareTo(OperatorGenerator otherOperator) {
+        return operatorPriority - otherOperator.getOperatorPriority();
     }
 
     public int getIndex(){

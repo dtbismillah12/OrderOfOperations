@@ -58,7 +58,7 @@ public class Asteroid {
         generator = new OperatorGenerator();
 
         //Get operator
-        operator = generator.getOperand();
+        operator = generator.getOperator();
 
         // Initialize a blank RectF
         rect = new RectF();
