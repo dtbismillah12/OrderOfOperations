@@ -10,12 +10,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 
 import java.util.Random;
 
 public class Asteroid {
-    private final float[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.MAGENTA};
+    private final int[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.MAGENTA};
 
     RectF rect;
 
@@ -52,10 +53,10 @@ public class Asteroid {
      * @param screenX is the width of the screen
      * @param screenY is the height of the screen
      */
-    public Asteroid(Context context, String operation, int screenX, int screenY){
+    public Asteroid(Context context, String operation, int screenX, int screenY, int levelsPassed){
 
         //Initialize Operator Generator
-        generator = new OperatorGenerator();
+        generator = new OperatorGenerator(levelsPassed);
 
         //Get operator
         operator = generator.getOperator();
@@ -74,7 +75,12 @@ public class Asteroid {
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid);
         Canvas canvas = new Canvas();
-        canvas.drawBitmap(bitmap, );
+        canvas.drawBitmap(bitmap, x, y, null);
+        Paint paint = new Paint();
+        paint.setColor(colors[generator.getIndex()]);
+        paint.setTextSize(10);
+        paint.setAntiAlias(true);
+        canvas.drawText(operator, x+10, y+10, paint);
 
     }
 }
