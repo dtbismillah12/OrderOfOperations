@@ -73,6 +73,8 @@ public class MissionView extends SurfaceView implements Runnable{
     //
     private Asteroid asteroid;
 
+    private Equation equation;
+
     // For sound FX
     private SoundPool soundPool;
     private int playerExplodeID = -1;
@@ -159,6 +161,8 @@ public class MissionView extends SurfaceView implements Runnable{
         // Make a new player space ship
         playerShip = new Spaceship(context, screenX, screenY);
         asteroid = new Asteroid(context, screenX, screenY, 5);
+
+        equation = new Equation(5);
 
         // Prepare the players bullet
         bullet = new Blaster(screenY);
@@ -488,7 +492,8 @@ public class MissionView extends SurfaceView implements Runnable{
             // Change the brush color
             paint.setColor(Color.argb(255,  249, 129, 0));
             paint.setTextSize(40);
-            canvas.drawText("Score: " + score + "   Lives: " + lives, 10,50, paint);
+            canvas.drawText("Score: " + score + "   Lives: " + lives, 10, 50, paint);
+            canvas.drawText(equation.toString(), 10, 90, paint);
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
