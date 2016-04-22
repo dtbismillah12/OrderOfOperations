@@ -8,6 +8,7 @@ package com.example.danyatazyeen.orderofoperations;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.RectF;
 
 import java.util.Random;
@@ -18,6 +19,9 @@ public class Asteroid {
 
     // The asteroids will be represented by a Bitmap
     private Bitmap bitmap;
+    private String operator;
+    private OperatorGenerator generator;
+
 
     // How long and high the paddle for each asteroid will be
     private float length;
@@ -47,6 +51,13 @@ public class Asteroid {
      * @param screenY is the height of the screen
      */
     public Asteroid(Context context, String operation, int screenX, int screenY){
+
+        //Initialize Operator Generator
+        generator = new OperatorGenerator();
+
+        //Get operator
+        operator = generator.getOperand();
+
         // Initialize a blank RectF
         rect = new RectF();
 
@@ -59,7 +70,9 @@ public class Asteroid {
         y = 0;
 
         // Initialize the bitmap
-        //bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid);
+        Canvas canvas = new Canvas();
+        canvas.drawBitmap(bitmap, );
 
     }
 }
