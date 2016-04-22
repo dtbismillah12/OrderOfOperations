@@ -16,12 +16,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 
     // spaceInvadersView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
     MissionView spaceInvadersView;
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,15 @@ public class MainActivity extends Activity {
         // Initialize gameView and set it as the view
         spaceInvadersView = new MissionView(this, size.x, size.y);
         setContentView(spaceInvadersView);
+
+        // Initialize the manager which allows access to all sensors
+        senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        // Specify the accelerometer sensor from the sensor manager
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        // Register the listener to the accelerometer sensor
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
@@ -55,6 +66,21 @@ public class MainActivity extends Activity {
 
         // Tell the gameView pause method to execute
         spaceInvadersView.pause();
+    }
+
+    // Method called when change in reading of the sensor
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor mySensor = event.sensor;
+
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float xAccel = event.values[0];
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
 }
