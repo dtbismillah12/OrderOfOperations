@@ -252,7 +252,7 @@ public class MissionView extends SurfaceView implements Runnable{
         boolean lost = false;
 
         // Move the player's ship
-        playerShip.update(fps);
+        playerShip.update();
 
 
         // Update the invaders if visible
@@ -527,6 +527,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
                 paused = false;
 
+                /*
                 if(motionEvent.getY() > screenY - screenY / 8) {
                     if (motionEvent.getX() > screenX / 2) {
                         playerShip.setMovementState(playerShip.RIGHT);
@@ -536,6 +537,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
 
                 }
+                */
 
                 if(motionEvent.getY() < screenY - screenY / 8) {
                     // Shots fired
@@ -558,13 +560,7 @@ public class MissionView extends SurfaceView implements Runnable{
         return true;
     }
 
-    public void changeShipDirection(int xAccel){
-        if(xAccel>0){
-            playerShip.setMovementState(playerShip.RIGHT);
-        } else if (xAccel<0){
-            playerShip.setMovementState(playerShip.LEFT);
-        } else {
-            playerShip.setMovementState(playerShip.STOPPED);
-        }
+    public void updateShipMovement(float xAccel){
+        playerShip.updateShipSpeed(-1*xAccel);
     }
 }

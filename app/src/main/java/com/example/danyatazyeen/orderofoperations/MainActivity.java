@@ -75,6 +75,7 @@ public class MainActivity extends Activity implements SensorEventListener{
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float xAccel = event.values[0];
+            spaceInvadersView.updateShipMovement(xAccel);
         }
     }
 

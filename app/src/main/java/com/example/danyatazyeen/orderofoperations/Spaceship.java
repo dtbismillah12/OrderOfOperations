@@ -12,6 +12,8 @@ import android.graphics.Paint;
  * referencing http://gamecodeschool.com/android/coding-a-space-invaders-game/
  */
 public class Spaceship {
+    public static float frameTime = 0.666f;
+
     RectF rect;
 
     // The player ship will be represented by a Bitmap
@@ -93,19 +95,13 @@ public class Spaceship {
     // This update method will be called from update in MissionView
     // It determines if the player ship needs to move and changes the coordinates
     // contained in x if necessary
-    public void update(long fps){
-        if(shipMoving == LEFT){
-            x = x - shipSpeed / fps;
-            if(x<=0){
-                x = 0;
-            }
-        }
+    public void update(){
+        x += shipSpeed;
 
-        if(shipMoving == RIGHT){
-            x = x + shipSpeed / fps;
-            if(x>=screenWidth-length){
-                x=screenWidth-length;
-            }
+        if(x<=0){
+            x = 0;
+        } else if(x>=screenWidth-length){
+            x=screenWidth-length;
         }
 
         // Update rect which is used to detect hits
@@ -114,6 +110,10 @@ public class Spaceship {
         rect.left = x;
         rect.right = x + length;
 
+    }
+
+    public void updateShipSpeed(float accelX){
+        shipSpeed = (accelX*frameTime);
     }
 
 }
