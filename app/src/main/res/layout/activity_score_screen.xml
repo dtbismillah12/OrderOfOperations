@@ -9,8 +9,7 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.danyatazyeen.orderofoperations.ScoreScreen"
-    tools:showIn="@layout/activity_score_screen">
+    tools:context="com.example.danyatazyeen.orderofoperations.ScoreScreen">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -29,12 +28,29 @@
         <ImageView
             android:layout_width="243dp"
             android:layout_height="222dp"
-            android:id="@+id/titleView"
+            android:id="@+id/endView"
             android:background="@null"
-            android:src="@drawable/title"
+            android:src="@drawable/gameOver"
             android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="100dp" />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restartButton"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@null"
+            android:src="@drawable/tryAgain"
+            android:layout_marginBottom="120dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/endButton"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@null"
+            android:src="@drawable/endGame"
+            android:layout_marginBottom="50dp" />
     </FrameLayout>
 
 </RelativeLayout>
