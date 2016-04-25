@@ -52,7 +52,7 @@ public class Spaceship {
 
         // Start ship in roughly the screen center
         x = screenX / 2;
-        y = screenY - 20;
+        y = screenY - height;
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ship);
@@ -81,6 +81,10 @@ public class Spaceship {
 
     public float getX(){
         return x;
+    }
+
+    public float getY(){
+        return y;
     }
 
     public float getLength(){

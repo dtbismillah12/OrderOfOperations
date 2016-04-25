@@ -39,6 +39,10 @@ public class Asteroid {
     // This will hold the pixels per second speedthat the paddle will move
     private float asteroidSpeed;
 
+    private int screenWidth;
+
+    private Random rand;
+
     // Which ways can the paddle move
     public final int STOPPED = 0;
     public final int LEFT = 1;
@@ -53,6 +57,7 @@ public class Asteroid {
      * @param screenY is the height of the screen
      */
     public Asteroid(Context context, int screenX, int screenY, int levelsPassed){
+        rand = new Random();
 
         //Initialize Operator Generator
         generator = new OperatorGenerator(levelsPassed);
@@ -68,7 +73,7 @@ public class Asteroid {
 
         int padding = screenX / 25;
 
-        x = screenX/2;
+        x =
         y = 0;
 
         // Initialize the bitmap
@@ -79,15 +84,9 @@ public class Asteroid {
                 (int) (height),
                 false);
 
-        /*
-        Canvas canvas = new Canvas();
-        canvas.drawBitmap(bitmap, x, y, null);
-        Paint paint = new Paint();
-        paint.setColor(colors[generator.getIndex()]);
-        paint.setTextSize(10);
-        paint.setAntiAlias(true);
-        canvas.drawText(operator, x + 10, y + 10, paint);
-        */
+        screenWidth = screenX;
+
+        asteroidSpeed = 60;
 
     }
 
@@ -113,6 +112,17 @@ public class Asteroid {
 
     public Bitmap getBitmap(){
         return bitmap;
+    }
+
+    public void update(){
+
+
+        // Update rect which is used to detect hits
+        rect.top = y;
+        rect.bottom = y + height;
+        rect.left = x;
+        rect.right = x + length;
+
     }
 
 }
