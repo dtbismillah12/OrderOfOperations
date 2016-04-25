@@ -1,6 +1,7 @@
 package com.example.danyatazyeen.orderofoperations;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -335,6 +337,13 @@ public class MissionView extends SurfaceView implements Runnable{
 
         if(lost){
             prepareLevel();
+            new Handler().postDelayed(new Runnable(){
+                public void run() {
+//                    Intent startGame = new Intent(MissionView.this, ScoreScreen.class);
+//                    startGame.setAction(startGame.ACTION_SEND);
+//                    startActivity(startGame);
+                }
+            }, 2000); //ScoreScreen launched after 2 seconds
         }
 
 
