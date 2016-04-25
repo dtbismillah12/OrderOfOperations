@@ -30,7 +30,7 @@
             android:layout_height="222dp"
             android:id="@+id/endView"
             android:background="@null"
-            android:src="@drawable/gameOver"
+            android:src="@drawable/gameover"
             android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="100dp" />
 
@@ -40,7 +40,7 @@
             android:id="@+id/restartButton"
             android:layout_gravity="center_horizontal|bottom"
             android:background="@null"
-            android:src="@drawable/tryAgain"
+            android:src="@drawable/tryagain"
             android:layout_marginBottom="120dp" />
 
         <ImageButton
@@ -49,7 +49,7 @@
             android:id="@+id/endButton"
             android:layout_gravity="center_horizontal|bottom"
             android:background="@null"
-            android:src="@drawable/endGame"
+            android:src="@drawable/endgame"
             android:layout_marginBottom="50dp" />
     </FrameLayout>
 

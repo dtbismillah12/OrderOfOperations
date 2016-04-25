@@ -73,7 +73,7 @@ public class Asteroid {
 
         int padding = screenX / 25;
 
-        x =
+        x = rand.nextInt(screenX);
         y = 0;
 
         // Initialize the bitmap

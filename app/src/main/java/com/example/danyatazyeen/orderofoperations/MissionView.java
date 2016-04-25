@@ -2,6 +2,7 @@ package com.example.danyatazyeen.orderofoperations;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -88,6 +89,8 @@ public class MissionView extends SurfaceView implements Runnable{
     private int uhID = -1;
     private int ohID = -1;
 
+    private int numTouches;
+
     // The score
     private int score = 0;
 
@@ -104,7 +107,6 @@ public class MissionView extends SurfaceView implements Runnable{
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
     public MissionView(Context context, int x, int y) {
-
         // The next line of code asks the
         // SurfaceView class to set up our object.
         // How kind.
@@ -120,6 +122,7 @@ public class MissionView extends SurfaceView implements Runnable{
         screenX = x;
         screenY = y;
 
+        numTouches = 0;
         // This SoundPool is deprecated but don't worry
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
 
@@ -536,15 +539,9 @@ public class MissionView extends SurfaceView implements Runnable{
     // So we can override this method and detect screen touches.
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-            // Player has touched the screen
+        switch(motionEvent.getAction() & MotionEvent.ACTION_MASK){
             case MotionEvent.ACTION_DOWN:
-
                 paused = false;
-
-                // Shots fired
                 bullet.shoot(playerShip.getX()+ playerShip.getLength()/2,screenY,bullet.UP);
                 soundPool.play(shootID, 1, 1, 0, 0, 1);
 
