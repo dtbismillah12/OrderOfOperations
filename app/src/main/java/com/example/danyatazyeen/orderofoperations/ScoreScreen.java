@@ -14,8 +14,8 @@ public class ScoreScreen extends AppCompatActivity {
         setContentView(R.layout.activity_score_screen);
     }
 
-    ImageView background = (ImageView) findViewById(R.id.startView);
+    //ImageView background = (ImageView) findViewById(R.id.startView);
 
-    ImageButton restartBTN = (ImageButton) findViewById(R.id.startButton);
-    ImageButton endBTN = (ImageButton) findViewById(R.i)
+    //ImageButton restartBTN = (ImageButton) findViewById(R.id.startButton);
+    //ImageButton endBTN = (ImageButton) findViewById(R.i)
 }
