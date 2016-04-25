@@ -175,10 +175,8 @@ public class MissionView extends SurfaceView implements Runnable{
         // Build an army of invaders
         numInvaders = 0;
         for(int column = 0; column < 6; column ++ ){
-            for(int row = 0; row < 5; row ++ ){
-                invaders[numInvaders] = new UFO(context, row, column, screenX, screenY);
-                numInvaders ++;
-            }
+            invaders[numInvaders] = new UFO(context, column, screenX, screenY);
+            numInvaders ++;
         }
 
         // Build the shelters
@@ -439,11 +437,11 @@ public class MissionView extends SurfaceView implements Runnable{
             canvas = ourHolder.lockCanvas();
 
             // Draw the background color
-            canvas.drawColor(Color.argb(255, 221, 160, 221));
-            //bitmap.(R.drawable.space_bg);
+            //canvas.drawColor(Color.argb(255, 221, 160, 221));
 
             // Choose the brush color for drawing
             paint.setColor(Color.argb(255, 255, 255, 255));
+
 
             // Now draw the player spaceship
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), screenY - 50, paint);

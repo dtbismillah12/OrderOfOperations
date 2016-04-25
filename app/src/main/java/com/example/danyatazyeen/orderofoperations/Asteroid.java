@@ -63,7 +63,7 @@ public class Asteroid {
         // Initialize a blank RectF
         rect = new RectF();
 
-        length = screenX / 20;
+        length = screenX / 10;
         height = screenY / 20;
 
         int padding = screenX / 25;

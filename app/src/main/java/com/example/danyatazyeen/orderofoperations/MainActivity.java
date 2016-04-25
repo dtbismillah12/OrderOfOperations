@@ -37,6 +37,7 @@ public class MainActivity extends Activity implements SensorEventListener{
 
         // Initialize gameView and set it as the view
         spaceInvadersView = new MissionView(this, size.x, size.y);
+        //setContentView(R.layout.content_main);
         setContentView(spaceInvadersView);
 
         // Initialize the manager which allows access to all sensors

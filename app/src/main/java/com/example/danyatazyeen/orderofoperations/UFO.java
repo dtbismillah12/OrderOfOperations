@@ -41,7 +41,7 @@ public class UFO {
     boolean isVisible;
 
 
-    public UFO (Context context, int row, int column, int screenX, int screenY) {
+    public UFO (Context context, int column, int screenX, int screenY) {
 
         // Initialize a blank RectF
         rect = new RectF();
@@ -54,7 +54,7 @@ public class UFO {
         int padding = screenX / 25;
 
         x = column * (length + padding);
-        y = row * (length + padding/4);
+        y = 0;
 
         // Initialize the bitmap
         bitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alien1);
@@ -128,7 +128,7 @@ public class UFO {
     public void dropDownAndReverse(){
         if(shipMoving == LEFT){
             shipMoving = RIGHT;
-        }else{
+        }else if(shipMoving == RIGHT){
             shipMoving = LEFT;
         }
 

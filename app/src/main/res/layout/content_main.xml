@@ -1,36 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/frameLayout"
-    android:scaleType="fitXY"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.danyatazyeen.orderofoperations.MainActivity"
-    tools:showIn="@layout/activity_main">
+    android:orientation="vertical"
+    tools:context="com.example.danyatazyeen.orderofoperations.MainActivity">
 
-    <ImageView
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/spaceView"
-        android:layout_gravity="center"
-        android:src="@drawable/space_bg"
-        android:orientation="vertical"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="false" />
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/shipView"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="61dp"
-        android:background="@drawable/ship" />
+        <FrameLayout
+            android:id="@+id/titles"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-</FrameLayout>
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/spaceView"
+                android:layout_gravity="center"
+                android:src="@drawable/space_bg"
+                android:orientation="vertical"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="false" />
+
+        <FrameLayout
+            android:id="@+id/details"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/shipView"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="61dp"
+                android:background="@drawable/ship" />
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</RelativeLayout>
