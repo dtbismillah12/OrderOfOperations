@@ -3,6 +3,8 @@ package com.example.danyatazyeen.orderofoperations;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -441,6 +443,9 @@ public class MissionView extends SurfaceView implements Runnable{
 
             // Choose the brush color for drawing
             paint.setColor(Color.argb(255, 255, 255, 255));
+
+            Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
+            canvas.drawBitmap(background, 0, 0, paint);
 
 
             // Now draw the player spaceship

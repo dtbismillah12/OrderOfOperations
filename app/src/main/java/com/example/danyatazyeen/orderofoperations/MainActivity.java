@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,7 +39,9 @@ public class MainActivity extends Activity implements SensorEventListener{
         // Initialize gameView and set it as the view
         spaceInvadersView = new MissionView(this, size.x, size.y);
         //setContentView(R.layout.content_main);
+        //getLayoutInflater().inflate(R.layout.content_main, spaceInvadersView);
         setContentView(spaceInvadersView);
+
 
         // Initialize the manager which allows access to all sensors
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
