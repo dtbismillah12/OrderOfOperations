@@ -73,7 +73,7 @@ public class Asteroid {
 
         int padding = screenX / 25;
 
-        x = rand.nextInt(screenX);
+        x = rand.nextInt(screenX-(int)length);
         y = 0;
 
         // Initialize the bitmap
@@ -114,8 +114,8 @@ public class Asteroid {
         return bitmap;
     }
 
-    public void update(){
-
+    public void update(float fps){
+        y = y + asteroidSpeed/fps;
 
         // Update rect which is used to detect hits
         rect.top = y;
