@@ -110,6 +110,10 @@ public class Asteroid {
         return height;
     }
 
+    public RectF getRect(){
+        return rect;
+    }
+
     public Bitmap getBitmap(){
         return bitmap;
     }

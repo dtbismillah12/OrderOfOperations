@@ -21,6 +21,7 @@ import android.view.SurfaceView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,6 +59,7 @@ public class MissionView extends SurfaceView implements Runnable{
     private int screenX;
     private int screenY;
 
+    private boolean contact;
     // The players ship
     private Spaceship playerShip;
 
@@ -65,22 +67,25 @@ public class MissionView extends SurfaceView implements Runnable{
     private ArrayList<Blaster> playerBullets;
 
     // The invaders bullets
-    private Blaster[] invadersBullets = new Blaster[200];
     private int nextBullet;
-    private int maxInvaderBullets = 10;
+    private int maxInvaderBullets = 15;
+    private Blaster[] invadersBullets;
 
     // Up to 60 invaders
-    private UFO[] invaders = new UFO[60];
-    private int numInvaders = 0;
+    private int numInvaders = 6;
+    private UFO[] invaders = new UFO[numInvaders];
 
     // The player's shelters are built from bricks
     private Barrier[] bricks = new Barrier[400];
     private int numBricks;
 
-    //
-    private Asteroid asteroid;
+    private Random rand;
+
+    private ArrayList<Asteroid> asteroids;
 
     private Equation equation;
+
+    private int level;
 
     // For sound FX
     private SoundPool soundPool;
@@ -91,13 +96,13 @@ public class MissionView extends SurfaceView implements Runnable{
     private int uhID = -1;
     private int ohID = -1;
 
-    private int numTouches;
+    private int currentLevel;
 
     // The score
     private int score = 0;
 
     // Lives
-    private int lives = 3;
+    private int lives;
 
     // How menacing should the sound be?
     private long menaceInterval = 1000;
@@ -123,11 +128,13 @@ public class MissionView extends SurfaceView implements Runnable{
         ourHolder = getHolder();
         paint = new Paint();
 
+        contact = false;
+
         screenX = x;
         screenY = y;
 
-        playerBullets = new ArrayList<Blaster>();
-
+        currentLevel = 0;
+        rand = new Random();
 
         // This SoundPool is deprecated but don't worry
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
@@ -168,29 +175,35 @@ public class MissionView extends SurfaceView implements Runnable{
     }
 
     private void prepareLevel(){
-         background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
-
+        background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
         // Here we will initialize all the game objects
 
         // Make a new player space ship
         playerShip = new Spaceship(context, screenX, screenY);
-        asteroid = new Asteroid(context, screenX, screenY, 5);
 
         equation = new Equation(5);
 
+        lives = 3;
+
         // Prepare the players bullet
-
-
-        // Initialize the invadersBullets array
-        for(int i = 0; i < invadersBullets.length; i++){
+        playerBullets = new ArrayList<Blaster>();
+        invadersBullets = new Blaster[maxInvaderBullets];
+        for(int i = 0; i<invadersBullets.length; i++){
             invadersBullets[i] = new Blaster(screenY);
         }
+        asteroids = new ArrayList<Asteroid>();
+        Asteroid ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        asteroids.add(ast);
+        ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        asteroids.add(ast);
+        ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        asteroids.add(ast);
+        ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        asteroids.add(ast);
 
         // Build an army of invaders
-        numInvaders = 0;
-        for(int column = 0; column < 6; column ++ ){
-            invaders[numInvaders] = new UFO(context, column, screenX, screenY);
-            numInvaders ++;
+        for(int i = 0; i < invaders.length; i ++ ){
+            invaders[i] = new UFO(context, i, screenX, screenY);
         }
 
         // Build the shelters
@@ -270,58 +283,17 @@ public class MissionView extends SurfaceView implements Runnable{
         // Move the player's ship
         playerShip.update();
 
-        asteroid.update(fps);
-
-
-        // Update the invaders if visible
-
-
-
-        // Update all the invaders bullets if active
+        // Update all the invaders bullets
         for(int i = 0; i < invadersBullets.length; i++){
-            if(invadersBullets[i].getStatus()) {
-                invadersBullets[i].update(fps);
-            }
+            updateInvaderBullets(i);
         }
 
         // Update all the invaders if visible
         for(int i = 0; i < numInvaders; i++){
-            if(invaders[i].getVisibility()) {
-
-                // Move the next invader
-                invaders[i].update(fps);
-
-                // Does he want to take a shot?
-                if(invaders[i].takeAim(playerShip.getX(), playerShip.getLength())){
-
-                    // If so try and spawn a bullet
-                    if(invadersBullets[nextBullet].shoot(invaders[i].getX() + invaders[i].getLength() / 2, invaders[i].getY(), 1)) {
-
-                        // Shot fired
-                        // Prepare for the next shot
-                        nextBullet++;
-
-                        // Loop back to the first one if we have reached the last
-                        if (nextBullet == maxInvaderBullets) {
-                            // This stops the firing of another bullet until one completes its journey
-                            // Because if bullet 0 is still active shoot returns false.
-                            nextBullet = 0;
-                        }
-                    }
-                }
-
-                // If that move caused them to bump the screen change bumped to true
-                if (invaders[i].getX() > screenX - invaders[i].getLength()
-                        || invaders[i].getX() < 0){
-
-                    bumped = true;
-
-
-                }
-            }
-
+            bumped = updateInvaders(i, bumped);
         }
 
+        updateAsteroids();
 
         // Did an invader bump into the edge of the screen
         if(bumped){
@@ -348,13 +320,15 @@ public class MissionView extends SurfaceView implements Runnable{
 
         if(lost){
             prepareLevel();
-            new Handler().postDelayed(new Runnable(){
+            score = 0;
+            /*new Handler().postDelayed(new Runnable(){
                 public void run() {
 //                    Intent startGame = new Intent(MissionView.this, ScoreScreen.class);
 //                    startGame.setAction(startGame.ACTION_SEND);
 //                    startActivity(startGame);
                 }
             }, 2000); //ScoreScreen launched after 2 seconds
+            */
         }
 
         for(int j = 0; j<playerBullets.size(); j++){
@@ -362,27 +336,28 @@ public class MissionView extends SurfaceView implements Runnable{
                 playerBullets.get(j).setInactive();
             }
 
-            // Has the player's bullet hit an invader
-            if(playerBullets.get(j).getStatus()) {
-                for (int i = 0; i < numInvaders; i++) {
-                    if (invaders[i].getVisibility()) {
-                        if (RectF.intersects(playerBullets.get(j).getRect(), invaders[i].getRect())) {
-                            invaders[i].setInvisible();
-                            soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
-                            playerBullets.get(j).setInactive();
-                            score = score + 10;
-
-                            // Has the player won
-                            if(score == numInvaders * 10){
-                                paused = true;
-                                score = 0;
-                                lives = 3;
-                                prepareLevel();
+            if(numInvaders>0){
+                // Has the player's bullet hit an invader
+                if(playerBullets.get(j).getStatus()) {
+                    for (int i = 0; i < invaders.length; i++) {
+                        if (invaders[i].getVisibility()) {
+                            if (RectF.intersects(playerBullets.get(j).getRect(), invaders[i].getRect())) {
+                                invaders[i].setInvisible();
+                                soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
+                                playerBullets.get(j).setInactive();
+                                score = score + 10;
+                                numInvaders--;
                             }
                         }
                     }
                 }
+            } else {
+                paused = true;
+                score = 0;
+                lives = 3;
+                prepareLevel();
             }
+
 
             // Has a player bullet hit a shelter brick
             if(playerBullets.get(j).getStatus()){
@@ -405,45 +380,14 @@ public class MissionView extends SurfaceView implements Runnable{
         }
 
 
-        // Has the player's bullet hit the top of the screen
-
-
-        // Has an invaders bullet hit the bottom of the screen
-        for(int i = 0; i < invadersBullets.length; i++){
-
-            if(invadersBullets[i].getImpactPointY() > screenY){
-                invadersBullets[i].setInactive();
-            }
-        }
-
-
-
-        // Has an alien bullet hit a shelter brick
-        for(int i = 0; i < invadersBullets.length; i++){
-            if(invadersBullets[i].getStatus()){
-                for(int j = 0; j < numBricks; j++){
-                    if(bricks[j].getVisibility()){
-                        if(RectF.intersects(invadersBullets[i].getRect(), bricks[j].getRect())){
-                            // A collision has occurred
-                            invadersBullets[i].setInactive();
-                            bricks[j].setInvisible();
-                            soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
-                        }
-                    }
-                }
-            }
-
-        }
-
-
-
         // Has an invader bullet hit the player ship
         for(int i = 0; i < invadersBullets.length; i++){
             if(invadersBullets[i].getStatus()){
-                if(RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
+                if (RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
                     invadersBullets[i].setInactive();
                     lives --;
                     soundPool.play(playerExplodeID, 1, 1, 0, 0, 1);
+                    playerShip.destroyShip(lives);
 
                     // Is it game over?
                     if(lives == 0){
@@ -475,58 +419,24 @@ public class MissionView extends SurfaceView implements Runnable{
 
 
             canvas.drawBitmap(background, 0, 0, paint);
-
-
-            // Now draw the player spaceship
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
-            canvas.drawBitmap(asteroid.getBitmap(), asteroid.getX(), asteroid.getY(), paint);
+
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
-            canvas.drawText(asteroid.getAsteroidOperator().getOperator(), asteroid.getX() + (asteroid.getWidth() / 4), asteroid.getY() + (asteroid.getHeight() / 2) + 10, paint);
 
             paint.setColor(Color.argb(255, 255, 255, 255));
-            // Draw the invaders
-            for(int i = 0; i < numInvaders; i++){
-                if(invaders[i].getVisibility()) {
-                    if(uhOrOh) {
-                        canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
-                    }else{
-                        canvas.drawBitmap(invaders[i].getBitmap2(), invaders[i].getX(), invaders[i].getY(), paint);
-                    }
-                }
-            }
 
-
-            // Draw the bricks if visible
-            for(int i = 0; i < numBricks; i++){
-                if(bricks[i].getVisibility()) {
-                    canvas.drawRect(bricks[i].getRect(), paint);
-                }
-            }
-
-            for(int i = 0; i<playerBullets.size(); i++){
-                // Draw the players bullet if active
-                if(playerBullets.get(i).getStatus()){
-                    canvas.drawRect(playerBullets.get(i).getRect(), paint);
-                }
-            }
-
-
-            // Draw the invaders bullets
-
-            // Update all the invader's bullets if active
-            for(int i = 0; i < invadersBullets.length; i++){
-                if(invadersBullets[i].getStatus()) {
-                    canvas.drawRect(invadersBullets[i].getRect(), paint);
-                }
-            }
-
+            drawAsteroids();
+            drawInvaders();
+            drawBricks();
+            drawPlayBullets();
+            drawInvadBullets();
 
             // Draw the score and remaining lives
             // Change the brush color
-            paint.setColor(Color.argb(255,  249, 129, 0));
+            paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
-            canvas.drawText("Score: " + score + "   Lives: " + lives, 10, 50, paint);
+            canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 10, 50, paint);
             canvas.drawText(equation.toString(), 10, 90, paint);
 
             // Draw everything to the screen
@@ -568,34 +478,115 @@ public class MissionView extends SurfaceView implements Runnable{
                 soundPool.play(shootID, 1, 1, 0, 0, 1);
                 break;
         }
-
-        /*switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-            // Player has touched the screen
-            case MotionEvent.ACTION_DOWN:
-
-                paused = false;
-
-                if(bullet.shoot(playerShip.getX()+ playerShip.getLength()/2,screenY,bullet.UP)){
-                    soundPool.play(shootID, 1, 1, 0, 0, 1);
-                }
-
-                break;
-
-
-            // Player has removed finger from screen
-            case MotionEvent.ACTION_UP:
-
-                if(motionEvent.getY() > screenY - screenY / 10) {
-                    playerShip.setMovementState(playerShip.STOPPED);
-                }
-                break;
-        }
-        */
         return true;
     }
 
     public void updateShipMovement(float xAccel){
         playerShip.updateShipSpeed(-1*xAccel);
+    }
+
+    public void updateInvaderBullets(int i){
+        if(invadersBullets[i].getStatus()) {
+            invadersBullets[i].update(fps);
+        }
+
+        if(invadersBullets[i].getStatus()){
+            for(int j = 0; j < numBricks; j++){
+                if(bricks[j].getVisibility()){
+                    if (RectF.intersects(invadersBullets[i].getRect(), bricks[j].getRect())){
+                        // A collision has occurred
+                        invadersBullets[i].setInactive();
+                        bricks[j].setInvisible();
+                        soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
+                    }
+                }
+            }
+        }
+
+        if(invadersBullets[i].getImpactPointY() > screenY){
+            invadersBullets[i].setInactive();
+        }
+
+    }
+
+    public boolean updateInvaders(int i, boolean bumped){
+        if(invaders[i].getVisibility()) {
+
+            // Move the next invader
+            invaders[i].update(fps);
+
+            // Does he want to take a shot?
+            if(invaders[i].takeAim(playerShip.getX(), playerShip.getLength())){
+
+                // If so try and spawn a bullet
+
+                if(invadersBullets[i].shoot(invaders[i].getX() + invaders[i].getLength() / 2, invaders[i].getY(), 1)) {
+
+                    // Shot fired
+                    // Prepare for the next shot
+                    nextBullet = (nextBullet + 1) % invadersBullets.length;
+                }
+
+            }
+
+            // If that move caused them to bump the screen change bumped to true
+            if (invaders[i].getX() > screenX - invaders[i].getLength()
+                || invaders[i].getX() < 0){
+
+                bumped = true;
+
+            }
+        }
+        return bumped;
+    }
+
+    public void drawInvaders(){
+        for(int i = 0; i < numInvaders; i++) {
+            if (invaders[i].getVisibility()) {
+                if (uhOrOh) {
+                    canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
+                } else {
+                    canvas.drawBitmap(invaders[i].getBitmap2(), invaders[i].getX(), invaders[i].getY(), paint);
+                }
+            }
+        }
+    }
+
+    public void drawBricks(){
+        for(int i = 0; i < numBricks; i++){
+            if(bricks[i].getVisibility()) {
+                canvas.drawRect(bricks[i].getRect(), paint);
+            }
+        }
+    }
+
+    public void drawPlayBullets() {
+        for(int i = 0; i<playerBullets.size(); i++){
+            if (playerBullets.get(i).getStatus()) {
+                canvas.drawRect(playerBullets.get(i).getRect(), paint);
+            }
+        }
+    }
+
+    public void drawInvadBullets(){
+        for(int i = 0; i < invadersBullets.length; i++){
+            if(invadersBullets[i].getStatus()) {
+                canvas.drawRect(invadersBullets[i].getRect(), paint);
+            }
+        }
+    }
+
+    public void updateAsteroids() {
+        for(int i = 0; i < asteroids.size(); i++) {
+            asteroids.get(i).update(fps);
+        }
+    }
+
+    public void drawAsteroids() {
+        for(int i = 0; i < asteroids.size(); i++) {
+            Asteroid ast = asteroids.get(i);
+            canvas.drawBitmap(ast.getBitmap(), ast.getX(), ast.getY(), paint);
+            canvas.drawText(ast.getAsteroidOperator().getOperator(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);
+        }
     }
 }

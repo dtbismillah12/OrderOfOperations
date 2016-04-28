@@ -131,34 +131,23 @@ public class UFO {
         }else if(shipMoving == RIGHT){
             shipMoving = LEFT;
         }
-
         y = y + height;
 
-        shipSpeed = shipSpeed * .5f;
+        //shipSpeed = shipSpeed * .5f;
     }
 
     public boolean takeAim(float playerShipX, float playerShipLength){
-
-        int randomNumber = -1;
-
         // If near the player
         if((playerShipX + playerShipLength > x && playerShipX + playerShipLength < x + length) ||
                 (playerShipX > x && playerShipX < x + length)) {
-
-            // A 1 in 500 chance to shoot
-            randomNumber = generator.nextInt(150);
-            if(randomNumber == 0) {
+            if(generator.nextInt(2) == 0) {
                 return true;
             }
-
+        } else {
+            if(generator.nextInt(1000) == 0){
+                return true;
+            }
         }
-
-        // If firing randomly (not near the player) a 1 in 5000 chance
-        randomNumber = generator.nextInt(2000);
-        if(randomNumber == 0){
-            return true;
-        }
-
         return false;
     }
 }

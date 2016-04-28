@@ -42,6 +42,8 @@ public class Blaster {
 
     public void setInactive(){
         isActive = false;
+        x = 0;
+        y = 0;
     }
 
     public float getImpactPointY(){

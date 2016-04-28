@@ -32,6 +32,7 @@ public class Spaceship {
     // This will hold the pixels per second speedthat the paddle will move
     private float shipSpeed;
 
+    private Context context;
     private int screenWidth;
 
     // Which ways can the paddle move
@@ -53,7 +54,7 @@ public class Spaceship {
         // Start ship in roughly the screen center
         x = screenX / 2 - (length/2);
         y = screenY - (2*height);
-
+        this.context = context;
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ship);
 
@@ -91,6 +92,10 @@ public class Spaceship {
         return length;
     }
 
+    public float getHeight(){
+        return height;
+    }
+
     // This method will be used to change/set if the paddle is going left, right or nowhere
     public void setMovementState(int state){
         shipMoving = state;
@@ -118,6 +123,19 @@ public class Spaceship {
 
     public void updateShipSpeed(float accelX){
         shipSpeed = (accelX*frameTime);
+    }
+
+    public void destroyShip(int lives){
+        if(lives == 2) {
+            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.two_life_ship);
+        } else if (lives == 1) {
+            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.one_life_ship);
+        }
+        // stretch the bitmap to a size appropriate for the screen resolution
+        bitmap = Bitmap.createScaledBitmap(bitmap,
+                (int) (length),
+                (int) (height),
+                false);
     }
 
 }
