@@ -54,7 +54,7 @@ public class UFO {
         int padding = screenX / 25;
 
         x = column * (length + padding);
-        y = 0;
+        y = screenY-(9*screenY/10);
 
         // Initialize the bitmap
         bitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alien1);

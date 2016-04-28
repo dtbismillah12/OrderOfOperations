@@ -74,7 +74,7 @@ public class Asteroid {
         int padding = screenX / 25;
 
         x = rand.nextInt(screenX-(int)length);
-        y = 0;
+        y = screenY-(9*screenY/10);
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.asteroid);
