@@ -342,10 +342,10 @@ public class MissionView extends SurfaceView implements Runnable{
             */
         }
 
-
-            if(numInvaders>0){
+        for(int j = 0; j < playerBullets.size(); j++) {
+            if (numInvaders > 0) {
                 // Has the player's bullet hit an invader
-                if(playerBullets.get(j).getStatus()) {
+                if (playerBullets.get(j).getStatus()) {
                     for (int i = 0; i < invaders.length; i++) {
                         if (invaders[i].getVisibility()) {
                             if (RectF.intersects(playerBullets.get(j).getRect(), invaders[i].getRect())) {
@@ -367,10 +367,10 @@ public class MissionView extends SurfaceView implements Runnable{
 
 
             // Has a player bullet hit a shelter brick
-            if(playerBullets.get(j).getStatus()){
-                for(int i = 0; i < numBricks; i++){
-                    if(bricks[i].getVisibility()){
-                        if(RectF.intersects(playerBullets.get(j).getRect(), bricks[i].getRect())){
+            if (playerBullets.get(j).getStatus()) {
+                for (int i = 0; i < numBricks; i++) {
+                    if (bricks[i].getVisibility()) {
+                        if (RectF.intersects(playerBullets.get(j).getRect(), bricks[i].getRect())) {
                             // A collision has occurred
                             playerBullets.get(j).setInactive();
                             bricks[i].setInvisible();
@@ -381,10 +381,11 @@ public class MissionView extends SurfaceView implements Runnable{
             }
 
             // Update the players bullet
-            if(playerBullets.get(j).getStatus()){
+            if (playerBullets.get(j).getStatus()) {
                 playerBullets.get(j).update(fps);
             }
         }
+
 
 
         // Has an invader bullet hit the player ship
@@ -582,8 +583,6 @@ public class MissionView extends SurfaceView implements Runnable{
                 }
             }
         }
-        */
-        return true;
     }
 
     public void drawBricks(){
