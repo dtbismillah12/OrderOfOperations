@@ -2,6 +2,7 @@ package com.example.danyatazyeen.orderofoperations;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -18,11 +19,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.EditText;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
 /**
  * Created by danyatazyeen on 4/16/16.
@@ -87,6 +90,9 @@ public class MissionView extends SurfaceView implements Runnable{
 
     private int level;
 
+    private SharedPreferences sharedPref;
+    private int finalScore;
+
     // For sound FX
     private SoundPool soundPool;
     private int playerExplodeID = -1;
@@ -127,8 +133,6 @@ public class MissionView extends SurfaceView implements Runnable{
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
         paint = new Paint();
-
-        contact = false;
 
         screenX = x;
         screenY = y;
@@ -319,6 +323,13 @@ public class MissionView extends SurfaceView implements Runnable{
 
 
         if(lost){
+            finalScore = score;
+            //Set<String> highScores = new String[] {0,0,0};
+
+//            sharedPref = getSharedPreferences("HighScores", Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPref.edit();
+//            editor.putStringSet("topFive", highScores);
+
             prepareLevel();
             score = 0;
             /*new Handler().postDelayed(new Runnable(){
@@ -331,10 +342,6 @@ public class MissionView extends SurfaceView implements Runnable{
             */
         }
 
-        for(int j = 0; j<playerBullets.size(); j++){
-            if(playerBullets.get(j).getImpactPointY() < 0){
-                playerBullets.get(j).setInactive();
-            }
 
             if(numInvaders>0){
                 // Has the player's bullet hit an invader
@@ -412,7 +419,7 @@ public class MissionView extends SurfaceView implements Runnable{
             canvas = ourHolder.lockCanvas();
 
             // Draw the background color
-            canvas.drawColor(Color.argb(255, 221, 160, 221));
+            //canvas.drawColor(Color.argb(255, 221, 160, 221));
 
             // Choose the brush color for drawing
             paint.setColor(Color.argb(255, 255, 255, 255));
@@ -431,6 +438,31 @@ public class MissionView extends SurfaceView implements Runnable{
             drawBricks();
             drawPlayBullets();
             drawInvadBullets();
+
+            // Draw the bricks if visible
+            for(int i = 0; i < numBricks; i++){
+                if(bricks[i].getVisibility()) {
+                    canvas.drawRect(bricks[i].getRect(), paint);
+                }
+            }
+
+            for(int i = 0; i<playerBullets.size(); i++){
+                // Draw the players bullet if active
+                if(playerBullets.get(i).getStatus()){
+                    canvas.drawRect(playerBullets.get(i).getRect(), paint);
+                }
+            }
+
+
+            // Draw the invaders bullets
+
+            // Update all the invader's bullets if active
+            for(int i = 0; i < invadersBullets.length; i++){
+                if(invadersBullets[i].getStatus()) {
+                    canvas.drawRect(invadersBullets[i].getRect(), paint);
+                }
+            }
+
 
             // Draw the score and remaining lives
             // Change the brush color
@@ -550,6 +582,8 @@ public class MissionView extends SurfaceView implements Runnable{
                 }
             }
         }
+        */
+        return true;
     }
 
     public void drawBricks(){
