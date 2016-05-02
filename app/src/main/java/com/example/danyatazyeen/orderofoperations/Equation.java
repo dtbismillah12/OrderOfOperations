@@ -10,6 +10,8 @@ import java.util.Random;
  * Created by jeffreyprior on 4/13/16.
  */
 public class Equation {
+    private final char[] operands = {'%', '/', 'x', '-', '+'};
+
     private Random rand;
     private StringBuilder equation;
     private boolean containsParentheses;
@@ -37,8 +39,21 @@ public class Equation {
         } else if(levelsPassed>5){
             numOfOperators = 3;
         }
-        constructEquation();
+        constructEquation(levelsPassed);
         createProperOperandOrder();
+    }
+
+    public StringBuilder getEquation(){
+        return equation;
+    }
+
+    public boolean isOperator(int index){
+        for(int i = 0; i < operands.length; i++){
+            if(equation.charAt(index) == operands[i]){
+                return true;
+            }
+        }
+        return false;
     }
 
     public String toString(){
@@ -50,18 +65,18 @@ public class Equation {
         return spacedEquation.toString();
     }
 
-    private void constructEquation(){
+    private void constructEquation(int levelsPassed){
         equation.append(rand.nextInt(10));
         for(int i = 1; i<= numOfOperators; i++){
-            addTerm(i-1);
+            addTerm(levelsPassed, i-1);
         }
         if(containsParentheses){
             addParentheses();
         }
     }
 
-    private void addTerm(int index){
-        OperatorGenerator genOperator = new OperatorGenerator(index);
+    private void addTerm(int levelsPassed, int index){
+        OperatorGenerator genOperator = new OperatorGenerator(levelsPassed, index);
         operators.add(genOperator);
         equation.append(genOperator.getOperator());
         equation.append(rand.nextInt(10));
@@ -85,7 +100,7 @@ public class Equation {
 
     public boolean isCorrectOperand(String operand, int index){
         if(operatorOrder.peek().getOperator().equals(operand) && operatorOrder.peek().getIndex() == index){
-            operatorOrder.poll();
+            operatorOrder.poll().makeInactive();
             return true;
         } else {
             return false;

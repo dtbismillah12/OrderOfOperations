@@ -16,7 +16,6 @@ import android.graphics.RectF;
 import java.util.Random;
 
 public class Asteroid {
-    private final int[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.MAGENTA};
 
     RectF rect;
 
@@ -51,6 +50,8 @@ public class Asteroid {
     // Is the ship moving and in which direction
     private int shipMoving = STOPPED;
 
+    boolean isVisible;
+
     /**
      * Constructor of the Asteroid class
      * @param screenX is the width of the screen
@@ -58,6 +59,8 @@ public class Asteroid {
      */
     public Asteroid(Context context, int screenX, int screenY, int levelsPassed){
         rand = new Random();
+
+        isVisible = true;
 
         //Initialize Operator Generator
         generator = new OperatorGenerator(levelsPassed);
@@ -92,6 +95,13 @@ public class Asteroid {
 
     public OperatorGenerator getAsteroidOperator(){
         return generator;
+    }
+
+    public void setInvisible(){
+        isVisible = false;
+    }
+    public boolean getVisibility(){
+        return isVisible;
     }
 
     public float getX(){

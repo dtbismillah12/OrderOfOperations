@@ -362,44 +362,31 @@ public class MissionView extends SurfaceView implements Runnable{
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
 
-            paint.setColor(Color.argb(255, 255, 255, 255));
-
             drawAsteroids();
             drawInvaders();
+
+            paint.setColor(Color.argb(255, 255, 255, 255));
+
             drawBricks();
             drawPlayBullets();
             drawInvadBullets();
 
-            // Draw the bricks if visible
-            for(int i = 0; i < numBricks; i++){
-                if(bricks[i].getVisibility()) {
-                    canvas.drawRect(bricks[i].getRect(), paint);
-                }
-            }
-
-            for(int i = 0; i<playerBullets.size(); i++){
-                // Draw the players bullet if active
-                if(playerBullets.get(i).getStatus()){
-                    canvas.drawRect(playerBullets.get(i).getRect(), paint);
-                }
-            }
-
-
-            // Draw the invaders bullets
-
-            // Update all the invader's bullets if active
-            for(int i = 0; i < invadersBullets.length; i++){
-                if(invadersBullets[i].getStatus()) {
-                    canvas.drawRect(invadersBullets[i].getRect(), paint);
-                }
-            }
-
-
-            // Draw the score and remaining lives
-            // Change the brush color
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
-            canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 50, screenY-40, paint);
+            canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 50, screenY - 40, paint);
+
+            // Drawing text for equation in different colors
+            /*StringBuilder eq = equation.getEquation();
+            int prevLocation = screenX/3;
+            int operatorIndex = 0;
+            for(int i = 0; i<eq.length(); i++){
+                if(equation.isOperator(i)){
+                    paint.setColor(operatorIndex);
+                    operatorIndex++;
+                }
+            }
+            */
+
             canvas.drawText(equation.toString(), screenX/3, 55, paint);
 
             // Draw everything to the screen
@@ -450,43 +437,46 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void updateInvaderBullets(){
         for(int i = 0; i < invadersBullets.length; i++){
-            if(invadersBullets[i].getStatus()) {
-                invadersBullets[i].update(fps);
-            }
-
-            if(invadersBullets[i].getStatus()){
-                for(int j = 0; j < numBricks; j++){
-                    if(bricks[j].getVisibility()){
-                        if (RectF.intersects(invadersBullets[i].getRect(), bricks[j].getRect())){
-                            // A collision has occurred
-                            invadersBullets[i].setInactive();
-                            bricks[j].setInvisible();
-                            soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
-                        }
-                    }
-                }
-            }
-
             if(invadersBullets[i].getImpactPointY() > screenY){
                 invadersBullets[i].setInactive();
             }
 
             if(invadersBullets[i].getStatus()){
-                if (RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
+                invadersBullets[i].update(fps);
+
+                checkInvaderHitBricks(i);
+                checkInvaderHitPlayer(i);
+            }
+        }
+    }
+
+    public void checkInvaderHitBricks(int i){
+        for(int j = 0; j < numBricks; j++){
+            if(bricks[j].getVisibility()){
+                if (RectF.intersects(invadersBullets[i].getRect(), bricks[j].getRect())){
+                    // A collision has occurred
                     invadersBullets[i].setInactive();
-                    lives --;
-                    soundPool.play(playerExplodeID, 1, 1, 0, 0, 1);
-                    playerShip.destroyShip(lives);
-
-                    // Is it game over?
-                    if(lives == 0){
-                        paused = true;
-                        lives = 3;
-                        score = 0;
-                        prepareLevel(currentLevel-1);
-
-                    }
+                    bricks[j].setInvisible();
+                    soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
                 }
+            }
+        }
+    }
+
+    public void checkInvaderHitPlayer(int i){
+        if (RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
+            invadersBullets[i].setInactive();
+            lives --;
+            soundPool.play(playerExplodeID, 1, 1, 0, 0, 1);
+            playerShip.destroyShip(lives);
+
+            // Is it game over?
+            if(lives == 0){
+                paused = true;
+                lives = 3;
+                score = 0;
+                prepareLevel(currentLevel-1);
+
             }
         }
     }
@@ -526,47 +516,60 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void updatePlayerBullets(){
         for(int j = 0; j < playerBullets.size(); j++) {
-            if (numInvaders > 0) {
-                // Has the player's bullet hit an invader
-                if (playerBullets.get(j).getStatus()) {
-                    for (int i = 0; i < invaders.length; i++) {
-                        if (invaders[i].getVisibility()) {
-                            if (RectF.intersects(playerBullets.get(j).getRect(), invaders[i].getRect())) {
-                                invaders[i].setInvisible();
-                                soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
-                                playerBullets.get(j).setInactive();
-                                score = score + 10;
-                                numInvaders--;
-                            }
-                        }
-                    }
-                }
-            } else {
-                paused = true;
-                score = 0;
-                lives = 3;
-                currentLevel++;
-                prepareLevel(currentLevel-1);
-            }
-
-
-            // Has a player bullet hit a shelter brick
-            if (playerBullets.get(j).getStatus()) {
-                for (int i = 0; i < numBricks; i++) {
-                    if (bricks[i].getVisibility()) {
-                        if (RectF.intersects(playerBullets.get(j).getRect(), bricks[i].getRect())) {
-                            // A collision has occurred
-                            playerBullets.get(j).setInactive();
-                            bricks[i].setInvisible();
-                            soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
-                        }
-                    }
-                }
-            }
-
-            // Update the players bullet
             if (playerBullets.get(j).getStatus()) {
                 playerBullets.get(j).update(fps);
+                checkPlayerHitBricks(j);
+                checkPlayerHitAsteroids(j);
+                if (numInvaders > 0) {
+                    checkPlayerHitInvader(j);
+                } else {
+                    paused = true;
+                    score = 0;
+                    lives = 3;
+                    currentLevel++;
+                    prepareLevel(currentLevel - 1);
+                }
+            }
+        }
+    }
+
+    public void checkPlayerHitInvader(int j){
+        for (int i = 0; i < invaders.length; i++) {
+            if (invaders[i].getVisibility()) {
+                if (RectF.intersects(playerBullets.get(j).getRect(), invaders[i].getRect())) {
+                    invaders[i].setInvisible();
+                    soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
+                    playerBullets.get(j).setInactive();
+                    score = score + 10;
+                    numInvaders--;
+                }
+            }
+        }
+    }
+
+    public void checkPlayerHitBricks(int j){
+        for (int i = 0; i < numBricks; i++) {
+            if (bricks[i].getVisibility()) {
+                if (RectF.intersects(playerBullets.get(j).getRect(), bricks[i].getRect())) {
+                    // A collision has occurred
+                    playerBullets.get(j).setInactive();
+                    bricks[i].setInvisible();
+                    soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
+                }
+            }
+        }
+    }
+
+    public void checkPlayerHitAsteroids(int j){
+        for(int i = 0; i < asteroids.size(); i++){
+            if (asteroids.get(i).getVisibility()) {
+                Asteroid ast = asteroids.get(i);
+                if (RectF.intersects(playerBullets.get(j).getRect(), ast.getRect())) {
+                    ast.setInvisible();
+                    soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
+                    playerBullets.get(j).setInactive();
+                    score = score + 50;
+                }
             }
         }
     }
@@ -616,8 +619,11 @@ public class MissionView extends SurfaceView implements Runnable{
     public void drawAsteroids() {
         for(int i = 0; i < asteroids.size(); i++) {
             Asteroid ast = asteroids.get(i);
-            canvas.drawBitmap(ast.getBitmap(), ast.getX(), ast.getY(), paint);
-            canvas.drawText(ast.getAsteroidOperator().getOperator(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);
+            if(ast.isVisible){
+                canvas.drawBitmap(ast.getBitmap(), ast.getX(), ast.getY(), paint);
+                paint.setColor(ast.getAsteroidOperator().getColor());
+                canvas.drawText(ast.getAsteroidOperator().getOperator(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);
+            }
         }
     }
 }
