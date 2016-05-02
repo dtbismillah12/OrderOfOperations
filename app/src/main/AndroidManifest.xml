@@ -18,6 +18,10 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ScoreScreen"
+            android:label="@string/score_activity_screen"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".StartScreen"
             android:label="@string/title_activity_start_screen"
             android:theme="@style/AppTheme.NoActionBar">
@@ -27,7 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScoreScreen"></activity>
     </application>
 
 </manifest>

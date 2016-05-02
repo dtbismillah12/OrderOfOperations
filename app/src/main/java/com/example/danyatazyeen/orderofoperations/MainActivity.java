@@ -1,6 +1,7 @@
 package com.example.danyatazyeen.orderofoperations;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,6 +10,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Point;
+import android.os.Handler;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,8 @@ import android.view.SurfaceView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import static android.support.v4.app.ActivityCompat.startActivity;
 
 
 public class MainActivity extends Activity implements SensorEventListener{
@@ -40,8 +44,6 @@ public class MainActivity extends Activity implements SensorEventListener{
 
         // Initialize gameView and set it as the view
         spaceInvadersView = new MissionView(this, size.x, size.y);
-        //setContentView(R.layout.content_main);
-        //getLayoutInflater().inflate(R.layout.content_main, spaceInvadersView);
         setContentView(spaceInvadersView);
 
 
@@ -72,6 +74,7 @@ public class MainActivity extends Activity implements SensorEventListener{
 
         // Tell the gameView pause method to execute
         spaceInvadersView.pause();
+
     }
 
     // Method called when change in reading of the sensor

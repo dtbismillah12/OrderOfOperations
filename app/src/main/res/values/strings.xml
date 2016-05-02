@@ -15,5 +15,6 @@
     </string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_start_screen">StartScreen</string>
+    <string name="score_activity_screen">ScoreScreen</string>
     <string name="action_settings">Settings</string>
 </resources>

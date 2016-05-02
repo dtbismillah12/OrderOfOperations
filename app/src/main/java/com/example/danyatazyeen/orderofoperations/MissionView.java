@@ -3,7 +3,7 @@ package com.example.danyatazyeen.orderofoperations;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
+import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.net.Uri;
 import android.widget.EditText;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.Set;
+
+//import static android.support.v4.app.ActivityCompat.startActivity;
 
 /**
  * Created by danyatazyeen on 4/16/16.
@@ -329,16 +332,11 @@ public class MissionView extends SurfaceView implements Runnable{
 //            SharedPreferences.Editor editor = sharedPref.edit();
 //            editor.putStringSet("topFive", highScores);
 
-            prepareLevel(currentLevel-1);
+            //prepareLevel(currentLevel-1);
             score = 0;
-            /*new Handler().postDelayed(new Runnable(){
-                public void run() {
-//                    Intent startGame = new Intent(MissionView.this, ScoreScreen.class);
-//                    startGame.setAction(startGame.ACTION_SEND);
-//                    startActivity(startGame);
-                }
-            }, 2000); //ScoreScreen launched after 2 seconds
-            */
+
+
+
         }
     }
 
@@ -412,6 +410,9 @@ public class MissionView extends SurfaceView implements Runnable{
     public void pause() {
         playing = false;
         try {
+//            Intent startGame = new Intent(getContext(), ScoreScreen.class);
+//            startGame.setAction(startGame.ACTION_SEND);
+//            context.startActivity(startGame);
             gameThread.join();
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
@@ -481,6 +482,7 @@ public class MissionView extends SurfaceView implements Runnable{
                     // Is it game over?
                     if(lives == 0){
                         paused = true;
+
                         lives = 3;
                         score = 0;
                         prepareLevel(currentLevel-1);

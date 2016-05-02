@@ -126,11 +126,11 @@ public class Spaceship {
     }
 
     public void destroyShip(int lives){
-        if(lives == 2) {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.two_life_ship);
-        } else if (lives == 1) {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.one_life_ship);
-        }
+//        if(lives == 2) {
+//            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.two_life_ship);
+//        } else if (lives == 1) {
+//            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.one_life_ship);
+//        }
         // stretch the bitmap to a size appropriate for the screen resolution
         bitmap = Bitmap.createScaledBitmap(bitmap,
                 (int) (length),
