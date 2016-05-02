@@ -1,7 +1,6 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations.gameobjects;
 
 import android.content.Context;
-import android.graphics.Canvas;
 
 /**
  * Created by danyatazyeen on 4/11/16.

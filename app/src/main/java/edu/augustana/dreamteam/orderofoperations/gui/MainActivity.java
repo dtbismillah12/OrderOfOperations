@@ -1,7 +1,6 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations.gui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,8 +10,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Point;
 import android.view.Display;
-
-import static android.support.v4.app.ActivityCompat.startActivity;
 
 
 public class MainActivity extends Activity implements SensorEventListener{

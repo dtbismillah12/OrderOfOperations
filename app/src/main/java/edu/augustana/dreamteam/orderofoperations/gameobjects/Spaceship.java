@@ -1,9 +1,11 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations.gameobjects;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
+
+import com.example.danyatazyeen.orderofoperations.R;
 
 /**
  * Created by danyatazyeen on 4/6/16.

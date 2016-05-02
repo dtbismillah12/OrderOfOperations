@@ -1,4 +1,4 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations.gameobjects;
 
 import java.util.ArrayList;
 import java.util.Collections;

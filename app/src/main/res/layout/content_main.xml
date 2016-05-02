@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.example.danyatazyeen.orderofoperations.MainActivity">
+    tools:context="edu.augustana.dreamteam.orderofoperations.gui.MainActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"

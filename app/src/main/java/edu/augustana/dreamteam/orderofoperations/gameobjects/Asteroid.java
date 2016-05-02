@@ -1,4 +1,4 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations.gameobjects;
 
 /**
  * Created by danyatazyeen on 4/6/16.
@@ -9,6 +9,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
+
+import com.example.danyatazyeen.orderofoperations.R;
 
 import java.util.Random;
 
@@ -47,7 +49,7 @@ public class Asteroid {
     // Is the ship moving and in which direction
     private int shipMoving = STOPPED;
 
-    boolean isVisible;
+    private boolean isVisible;
 
     /**
      * Constructor of the Asteroid class
@@ -97,7 +99,7 @@ public class Asteroid {
     public void setInvisible(){
         isVisible = false;
     }
-    public boolean getVisibility(){
+    public boolean isVisible(){
         return isVisible;
     }
 

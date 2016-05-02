@@ -1,4 +1,4 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations.gui;
 
 /**
  * Created by danyatazyeen on 4/16/16.

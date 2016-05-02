@@ -9,7 +9,7 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.danyatazyeen.orderofoperations.ScoreScreen">
+    tools:context="edu.augustana.dreamteam.orderofoperations.gui.ScoreScreen">
 
     <FrameLayout
         android:layout_width="match_parent"

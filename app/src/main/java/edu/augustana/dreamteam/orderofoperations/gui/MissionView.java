@@ -1,4 +1,4 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations.gui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,11 +17,17 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import edu.augustana.dreamteam.orderofoperations.gameobjects.Asteroid;
+import edu.augustana.dreamteam.orderofoperations.gameobjects.Barrier;
+import edu.augustana.dreamteam.orderofoperations.gameobjects.Blaster;
+import edu.augustana.dreamteam.orderofoperations.gameobjects.Equation;
+import com.example.danyatazyeen.orderofoperations.R;
+import edu.augustana.dreamteam.orderofoperations.gameobjects.Spaceship;
+import edu.augustana.dreamteam.orderofoperations.gameobjects.UFO;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.Set;
 
 //import static android.support.v4.app.ActivityCompat.startActivity;
 
@@ -558,7 +564,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void checkPlayerHitAsteroids(int j){
         for(int i = 0; i < asteroids.size(); i++){
-            if (asteroids.get(i).getVisibility()) {
+            if (asteroids.get(i).isVisible()) {
                 Asteroid ast = asteroids.get(i);
                 if (RectF.intersects(playerBullets.get(j).getRect(), ast.getRect())) {
                     ast.setInvisible();
@@ -615,7 +621,7 @@ public class MissionView extends SurfaceView implements Runnable{
     public void drawAsteroids() {
         for(int i = 0; i < asteroids.size(); i++) {
             Asteroid ast = asteroids.get(i);
-            if(ast.isVisible){
+            if(ast.isVisible()){
                 canvas.drawBitmap(ast.getBitmap(), ast.getX(), ast.getY(), paint);
                 paint.setColor(ast.getAsteroidOperator().getColor());
                 canvas.drawText(ast.getAsteroidOperator().getOperator(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);

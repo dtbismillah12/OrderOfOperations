@@ -1,4 +1,4 @@
-package com.example.danyatazyeen.orderofoperations;
+package edu.augustana.dreamteam.orderofoperations;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
