@@ -3,9 +3,7 @@ package com.example.danyatazyeen.orderofoperations;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.graphics.Paint;
 
 /**
  * Created by danyatazyeen on 4/6/16.

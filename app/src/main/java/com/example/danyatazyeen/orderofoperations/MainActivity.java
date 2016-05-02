@@ -10,14 +10,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Point;
-import android.os.Handler;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SurfaceView;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import static android.support.v4.app.ActivityCompat.startActivity;
 

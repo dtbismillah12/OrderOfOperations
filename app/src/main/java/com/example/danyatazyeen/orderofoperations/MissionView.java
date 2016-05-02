@@ -1,9 +1,7 @@
 package com.example.danyatazyeen.orderofoperations;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -14,13 +12,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.net.Uri;
-import android.widget.EditText;
 
 import java.io.IOException;
 import java.util.ArrayList;
