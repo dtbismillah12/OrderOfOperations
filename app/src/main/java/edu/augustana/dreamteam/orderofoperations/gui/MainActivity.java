@@ -17,7 +17,7 @@ public class MainActivity extends Activity implements SensorEventListener{
     // spaceInvadersView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
-    MissionView spaceInvadersView;
+    private MissionView spaceInvadersView;
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 

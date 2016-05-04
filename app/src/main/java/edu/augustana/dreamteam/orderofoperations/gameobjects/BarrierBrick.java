@@ -5,12 +5,12 @@ import android.graphics.RectF;
 /**
  * Created by danyatazyeen on 4/18/16.
  */
-public class Barrier {
+public class BarrierBrick {
     private RectF rect;
 
     private boolean isVisible;
 
-    public Barrier(int row, int column, int shelterNumber, int screenX, int screenY){
+    public BarrierBrick(int row, int column, int shelterNumber, int screenX, int screenY){
 
         int width = screenX / 90;
         int height = screenY / 40;
@@ -36,7 +36,7 @@ public class Barrier {
         isVisible = false;
     }
 
-    public boolean getVisibility(){
+    public boolean isAlive(){
         return isVisible;
     }
 

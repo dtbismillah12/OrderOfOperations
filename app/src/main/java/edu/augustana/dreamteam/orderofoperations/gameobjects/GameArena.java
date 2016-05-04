@@ -6,7 +6,7 @@ import android.content.Context;
  * Created by danyatazyeen on 4/11/16.
  */
 
-public class AnimationArena {
+public class GameArena {
 
         private static Spaceship playerShip;
         private static int nextOpenSlot;
@@ -17,7 +17,7 @@ public class AnimationArena {
         private int screenLength;
 
 
-        public AnimationArena () {
+        public GameArena() {
             //INSTANTIATE THE SHIP
                 playerShip = new Spaceship(context, 150, 107);
         }

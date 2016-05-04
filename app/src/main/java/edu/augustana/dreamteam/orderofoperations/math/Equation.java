@@ -1,4 +1,4 @@
-package edu.augustana.dreamteam.orderofoperations.gameobjects;
+package edu.augustana.dreamteam.orderofoperations.math;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,16 +16,21 @@ public class Equation {
     private StringBuilder equation;
     private boolean containsParentheses;
     private int numOfOperators;
-    private Queue<OperatorGenerator> operatorOrder;
-    private ArrayList<OperatorGenerator> operators;
+    private Queue<Operator> operatorOrder;
+    private ArrayList<Operator> operators;
+
+    //TODO: get the game logic stuff out (and into gameArena)
+    //   Equation should think in terms of number of operators / complexity (contains parens?)
+    //   Equation should provide methods for getting THE correct operation, or an incorrect
+    //    operation (which may or may not be in the equation at all).
 
     public Equation(){
         rand = new Random();
         equation = new StringBuilder();
         containsParentheses = false;
         numOfOperators = 2;
-        operatorOrder = new LinkedList<OperatorGenerator>();
-        operators = new ArrayList<OperatorGenerator>();
+        operatorOrder = new LinkedList<Operator>();
+        operators = new ArrayList<Operator>();
     }
 
     //sets the number of operators given in the equation depending how far the player has gotten in the game
@@ -76,9 +81,9 @@ public class Equation {
     }
 
     private void addTerm(int levelsPassed, int index){
-        OperatorGenerator genOperator = new OperatorGenerator(levelsPassed, index);
+        Operator genOperator = new Operator(levelsPassed, index);
         operators.add(genOperator);
-        equation.append(genOperator.getOperator());
+        equation.append(genOperator.getOperatorChar());
         equation.append(rand.nextInt(10));
     }
 
@@ -98,7 +103,7 @@ public class Equation {
         }
     }
 
-    public boolean isCorrectOperator(OperatorGenerator other){
+    public boolean isCorrectOperator(Operator other){
         if(operatorOrder.peek().equals(other)){
             operatorOrder.poll().makeInactive();
             return true;
@@ -117,7 +122,7 @@ public class Equation {
     public String properOrderString(){
         StringBuilder properOrder = new StringBuilder();
         while(!operatorOrder.isEmpty()){
-            properOrder.append(operatorOrder.peek().getOperator());
+            properOrder.append(operatorOrder.peek().getOperatorChar());
             properOrder.append(",");
             properOrder.append(operatorOrder.poll().getIndex());
             properOrder.append("\n");

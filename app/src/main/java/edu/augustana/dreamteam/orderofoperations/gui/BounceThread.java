@@ -9,13 +9,13 @@ import android.view.SurfaceHolder;
 public class BounceThread extends Thread {
 
 //    private SurfaceHolder surfaceHolder;
-//    private AnimationArena animationArena;
+//    private GameArena animationArena;
 //    private boolean isRunning;
 //
 //    public BounceThread (SurfaceHolder sh){
 //        isRunning = true;
 //        surfaceHolder = sh;
-//        animationArena = new AnimationArena();
+//        animationArena = new GameArena();
 //    }
 //
 //    public void run() {

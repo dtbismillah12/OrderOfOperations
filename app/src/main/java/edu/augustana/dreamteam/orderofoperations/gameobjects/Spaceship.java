@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 
-import com.example.danyatazyeen.orderofoperations.R;
+import edu.augustana.dreamteam.orderofoperations.R;
 
 /**
  * Created by danyatazyeen on 4/6/16.
@@ -14,7 +14,7 @@ import com.example.danyatazyeen.orderofoperations.R;
 public class Spaceship {
     public static float frameTime = 0.666f;
 
-    RectF rect;
+    private RectF rect;
 
     // The player ship will be represented by a Bitmap
     private Bitmap bitmap;
@@ -29,19 +29,11 @@ public class Spaceship {
     // Y is the top coordinate
     private float y;
 
-    // This will hold the pixels per second speedthat the paddle will move
+    // This will hold the pixels per second speed that the paddle will move
     private float shipSpeed;
 
     private Context context;
     private int screenWidth;
-
-    // Which ways can the paddle move
-    public final int STOPPED = 0;
-    public final int LEFT = 1;
-    public final int RIGHT = 2;
-
-    // Is the ship moving and in which direction
-    private int shipMoving = STOPPED;
 
     public Spaceship(Context context, int screenX, int screenY){
 
@@ -96,11 +88,6 @@ public class Spaceship {
         return height;
     }
 
-    // This method will be used to change/set if the paddle is going left, right or nowhere
-    public void setMovementState(int state){
-        shipMoving = state;
-    }
-
     // This update method will be called from update in MissionView
     // It determines if the player ship needs to move and changes the coordinates
     // contained in x if necessary
@@ -131,6 +118,7 @@ public class Spaceship {
 //        } else if (lives == 1) {
 //            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.one_life_ship);
 //        }
+        //TODO: Move all "heavy" bitmap operations to startup.
         // stretch the bitmap to a size appropriate for the screen resolution
         bitmap = Bitmap.createScaledBitmap(bitmap,
                 (int) (length),
