@@ -36,15 +36,13 @@ public class Equation {
     //sets the number of operators given in the equation depending how far the player has gotten in the game
     //if they have advanced at least ten rounds, parentheses will randomly be thrown into the equation
     // @param: levelsPassed gives how many rounds the player has passed
-    public Equation(int levelsPassed){
+    public Equation(int numOfOperators){
         this();
-        if(levelsPassed>10){
-            numOfOperators = 4;
+        this.numOfOperators = numOfOperators;
+        if(numOfOperators > 3){
             containsParentheses = rand.nextBoolean();
-        } else if(levelsPassed>5){
-            numOfOperators = 3;
         }
-        constructEquation(levelsPassed);
+        constructEquation();
         createProperOperatorOrder();
     }
 
@@ -70,18 +68,18 @@ public class Equation {
         return spacedEquation.toString();
     }
 
-    private void constructEquation(int levelsPassed){
+    private void constructEquation(){
         equation.append(rand.nextInt(10));
         for(int i = 1; i<= numOfOperators; i++){
-            addTerm(levelsPassed, i-1);
+            addTerm(i-1);
         }
         if(containsParentheses){
             addParentheses();
         }
     }
 
-    private void addTerm(int levelsPassed, int index){
-        Operator genOperator = new Operator(levelsPassed, index);
+    private void addTerm(int index){
+        Operator genOperator = new Operator(index);
         operators.add(genOperator);
         equation.append(genOperator.getOperatorChar());
         equation.append(rand.nextInt(10));

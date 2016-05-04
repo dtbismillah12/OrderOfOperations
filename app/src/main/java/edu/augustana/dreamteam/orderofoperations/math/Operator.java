@@ -10,8 +10,6 @@ import java.util.Random;
 public class Operator implements Comparable<Operator>{
     private static final String[] operands = {"%", "/", "*", "-", "+"};
 
-    private static final int[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.MAGENTA, Color.BLACK};
-
     private String opChar;
     private int operatorIndex;
     private int operatorPriority;
@@ -19,7 +17,7 @@ public class Operator implements Comparable<Operator>{
     private int colorCode;
 
     //sets a priority to each operand
-    public Operator(int levelsPassed){
+    public Operator(){
         Random random = new Random();
         operatorIndex = random.nextInt(5);
         opChar = operands[operatorIndex];
@@ -28,20 +26,12 @@ public class Operator implements Comparable<Operator>{
         } else {
             operatorPriority = 4;
         }
-        if(levelsPassed>10){
-            indexInEquation = random.nextInt(4);
-        } else if(levelsPassed>5){
-            indexInEquation = random.nextInt(3);
-        } else {
-            indexInEquation = random.nextInt(2);
-        }
-        colorCode = colors[indexInEquation];
+        indexInEquation = random.nextInt(4);
     }
 
-    public Operator(int levelsPassed, int index){
-        this(levelsPassed);
+    public Operator(int index){
+        this();
         indexInEquation = index;
-        colorCode = colors[indexInEquation];
     }
 
     public String getOperatorChar(){
@@ -70,13 +60,8 @@ public class Operator implements Comparable<Operator>{
         return indexInEquation;
     }
 
-    public int getColor(){
-        return colorCode;
-    }
-
     public void makeInactive(){
         indexInEquation = 4;
-        colorCode = colors[indexInEquation];
     }
 
     @Override

@@ -32,8 +32,11 @@ import java.util.Random;
  */
 
 public class MissionView extends SurfaceView implements Runnable{
+    private static final int[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.MAGENTA, Color.BLACK};
 
     private Context context;
+
+    private long startTime = System.currentTimeMillis();
 
     // Our game thread
     private Thread gameThread = null;
@@ -129,6 +132,9 @@ public class MissionView extends SurfaceView implements Runnable{
 
     private Bitmap background;
 
+    private int numOperators;
+    private int maxNumAsteroids = 4;
+
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
     public MissionView(Context context, int x, int y) {
@@ -185,6 +191,9 @@ public class MissionView extends SurfaceView implements Runnable{
             Log.e("error", "failed to load sound files");
         }
 
+        //Set background of our view to the space graphic
+        background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
+
         prepareLevel(currentLevel-1);
     }
 
@@ -195,17 +204,21 @@ public class MissionView extends SurfaceView implements Runnable{
     private void prepareLevel(int levelsPassed){
         numInvaders = 6;
 
-        //TODO: Move this to constructor?
-        //Set background of our view to the space graphic
-        background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
-
         // Here we will initialize all the game objects
 
         //TODO: the rest of this basically looks model-related, goes into GameArena
         // Make a new player space ship
         playerShip = new Spaceship(context, screenWidth, screenHeight -(screenHeight /10));
 
-        equation = new Equation(levelsPassed);
+        if(levelsPassed>10){
+            numOperators = 4;
+        } else if (levelsPassed>5){
+            numOperators = 3;
+        } else {
+            numOperators = 2;
+        }
+
+        equation = new Equation(numOperators);
 
         lives = 3;
 
@@ -218,14 +231,6 @@ public class MissionView extends SurfaceView implements Runnable{
 
         // Adding asteroids to the view
         asteroids = new ArrayList<Asteroid>();
-        Asteroid ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
-        asteroids.add(ast);
-        ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
-        asteroids.add(ast);
-        ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
-        asteroids.add(ast);
-        ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
-        asteroids.add(ast);
 
         // Build an army of invaders
         for(int i = 0; i < invaders.length; i ++ ){
@@ -308,6 +313,7 @@ public class MissionView extends SurfaceView implements Runnable{
     is greater than one of them.
      */
     private void update(){
+        addAsteroids();
 
         // Did an invader bump into the side of the screen
         boolean bumped = false;
@@ -494,18 +500,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
             // Is it game over?
             if(lives == 0){
-                paused = true;
-                lives = 3;
-                score = 0;
-//                Intent startGame = new Intent(getContext(), ScoreScreen.class);
-//                startGame.setAction(startGame.ACTION_SEND);
-//                context.startActivity(startGame);
-
-
-                //Will eventually not need this line since once player loses lives,
-                // game will stop and score screen will be displayed
-                prepareLevel(currentLevel-1);
-
+                playerLost();
             }
         }
     }
@@ -595,9 +590,27 @@ public class MissionView extends SurfaceView implements Runnable{
                 Asteroid ast = asteroids.get(i);
                 if (RectF.intersects(playerBullets.get(j).getRect(), ast.getRect())) {
                     ast.setInvisible();
+                    asteroids.remove(i);
                     soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                     playerBullets.get(j).setInactive();
                     score = score + 50;
+                }
+            }
+        }
+    }
+
+    public void checkAsteroidHitPlayer(int i){
+        if (asteroids.get(i).isVisible()) {
+            Asteroid ast = asteroids.get(i);
+            if (RectF.intersects(playerShip.getRect(), ast.getRect())) {
+                ast.setInvisible();
+                asteroids.remove(i);
+                soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
+                lives--;
+                playerShip.destroyShip(lives);
+
+                if(lives==0){
+                    playerLost();
                 }
             }
         }
@@ -639,9 +652,22 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    public void addAsteroids(){
+        long timeDiff = System.currentTimeMillis() - startTime;
+        if((timeDiff > 2000) && (asteroids.size()<maxNumAsteroids)){
+            Asteroid ast = new Asteroid(context, screenWidth, screenHeight, numOperators);
+            asteroids.add(ast);
+            startTime = System.currentTimeMillis();
+        }
+    }
+
     public void updateAsteroids() {
         for(int i = 0; i < asteroids.size(); i++) {
             asteroids.get(i).update(fps);
+            if(asteroids.get(i).getY()>screenHeight){
+                asteroids.remove(i);
+            }
+            checkAsteroidHitPlayer(i);
         }
     }
 
@@ -650,9 +676,23 @@ public class MissionView extends SurfaceView implements Runnable{
             Asteroid ast = asteroids.get(i);
             if(ast.isVisible()){
                 canvas.drawBitmap(ast.getBitmap(), ast.getX(), ast.getY(), paint);
-                paint.setColor(ast.getAsteroidOperator().getColor());
+                paint.setColor(colors[ast.getAsteroidOperator().getIndex()]);
                 canvas.drawText(ast.getAsteroidOperator().getOperatorChar(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);
             }
         }
+    }
+
+    public void playerLost(){
+        paused = true;
+        lives = 3;
+        score = 0;
+//                Intent startGame = new Intent(getContext(), ScoreScreen.class);
+//                startGame.setAction(startGame.ACTION_SEND);
+//                context.startActivity(startGame);
+
+
+        //Will eventually not need this line since once player loses lives,
+        // game will stop and score screen will be displayed
+        prepareLevel(currentLevel-1);
     }
 }

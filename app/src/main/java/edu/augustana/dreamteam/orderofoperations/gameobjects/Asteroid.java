@@ -41,14 +41,6 @@ public class Asteroid {
 
     private Random rand;
 
-    // Which ways can the paddle move
-    public final int STOPPED = 0;
-    public final int LEFT = 1;
-    public final int RIGHT = 2;
-
-    // Is the ship moving and in which direction
-    private int shipMoving = STOPPED;
-
     private boolean isVisible;
 
     /**
@@ -56,13 +48,13 @@ public class Asteroid {
      * @param screenX is the width of the screen
      * @param screenY is the height of the screen
      */
-    public Asteroid(Context context, int screenX, int screenY, int levelsPassed){
+    public Asteroid(Context context, int screenX, int screenY, int numOperators){
         rand = new Random();
 
         isVisible = true;
 
         //Initialize Operator Generator
-        myOperator = new Operator(levelsPassed);
+        myOperator = new Operator();
 
         // Initialize a blank RectF
         rect = new RectF();
