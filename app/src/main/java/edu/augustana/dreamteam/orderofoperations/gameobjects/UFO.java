@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 
-import com.example.danyatazyeen.orderofoperations.R;
+import edu.augustana.dreamteam.orderofoperations.R;
 
 import java.util.Random;
 
@@ -82,7 +82,7 @@ public class UFO {
         isVisible = false;
     }
 
-    public boolean getVisibility(){
+    public boolean isAlive(){
         return isVisible;
     }
 

@@ -10,7 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 
-import com.example.danyatazyeen.orderofoperations.R;
+import edu.augustana.dreamteam.orderofoperations.R;
+import edu.augustana.dreamteam.orderofoperations.math.Operator;
 
 import java.util.Random;
 
@@ -20,8 +21,7 @@ public class Asteroid {
 
     // The asteroids will be represented by a Bitmap
     private Bitmap bitmap;
-    private String operator;
-    private OperatorGenerator generator;
+    private Operator myOperator;
 
 
     // How long and high the paddle for each asteroid will be
@@ -62,10 +62,7 @@ public class Asteroid {
         isVisible = true;
 
         //Initialize Operator Generator
-        generator = new OperatorGenerator(levelsPassed);
-
-        //Get operator
-        operator = generator.getOperator();
+        myOperator = new Operator(levelsPassed);
 
         // Initialize a blank RectF
         rect = new RectF();
@@ -92,8 +89,8 @@ public class Asteroid {
 
     }
 
-    public OperatorGenerator getAsteroidOperator(){
-        return generator;
+    public Operator getAsteroidOperator(){
+        return myOperator;
     }
 
     public void setInvisible(){

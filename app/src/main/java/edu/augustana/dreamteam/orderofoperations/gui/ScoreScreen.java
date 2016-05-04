@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.example.danyatazyeen.orderofoperations.R;
+import edu.augustana.dreamteam.orderofoperations.R;
 
 import java.util.Set;
 

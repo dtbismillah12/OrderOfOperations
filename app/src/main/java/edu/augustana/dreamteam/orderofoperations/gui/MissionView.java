@@ -1,7 +1,6 @@
 package edu.augustana.dreamteam.orderofoperations.gui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -18,13 +17,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import edu.augustana.dreamteam.orderofoperations.gameobjects.Asteroid;
-import edu.augustana.dreamteam.orderofoperations.gameobjects.Barrier;
-import edu.augustana.dreamteam.orderofoperations.gameobjects.Blaster;
-import edu.augustana.dreamteam.orderofoperations.gameobjects.Equation;
-import com.example.danyatazyeen.orderofoperations.R;
-import edu.augustana.dreamteam.orderofoperations.gameobjects.Spaceship;
-import edu.augustana.dreamteam.orderofoperations.gameobjects.UFO;
+import edu.augustana.dreamteam.orderofoperations.math.Equation;
+import edu.augustana.dreamteam.orderofoperations.gameobjects.*;
+import edu.augustana.dreamteam.orderofoperations.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,8 +60,8 @@ public class MissionView extends SurfaceView implements Runnable{
     private long timeThisFrame;
 
     // The size of the screen in pixels
-    private int screenX;
-    private int screenY;
+    private int screenWidth;
+    private int screenHeight;
 
     private boolean contact;
 
@@ -88,7 +83,7 @@ public class MissionView extends SurfaceView implements Runnable{
     private UFO[] invaders = new UFO[numInvaders];
 
     // The player's shelters are built from bricks
-    private Barrier[] bricks = new Barrier[400];
+    private BarrierBrick[] bricks = new BarrierBrick[400];
     private int numBricks;
 
     private Random rand;
@@ -149,8 +144,8 @@ public class MissionView extends SurfaceView implements Runnable{
         ourHolder = getHolder();
         paint = new Paint();
 
-        screenX = x;
-        screenY = y;
+        screenWidth = x;
+        screenHeight = y;
 
         currentLevel = 1;
         rand = new Random();
@@ -200,13 +195,15 @@ public class MissionView extends SurfaceView implements Runnable{
     private void prepareLevel(int levelsPassed){
         numInvaders = 6;
 
+        //TODO: Move this to constructor?
         //Set background of our view to the space graphic
         background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
 
         // Here we will initialize all the game objects
 
+        //TODO: the rest of this basically looks model-related, goes into GameArena
         // Make a new player space ship
-        playerShip = new Spaceship(context, screenX, screenY-(screenY/10));
+        playerShip = new Spaceship(context, screenWidth, screenHeight -(screenHeight /10));
 
         equation = new Equation(levelsPassed);
 
@@ -216,23 +213,23 @@ public class MissionView extends SurfaceView implements Runnable{
         playerBullets = new ArrayList<Blaster>();
         invadersBullets = new Blaster[maxInvaderBullets];
         for(int i = 0; i<invadersBullets.length; i++){
-            invadersBullets[i] = new Blaster(screenY);
+            invadersBullets[i] = new Blaster(screenHeight);
         }
 
         // Adding asteroids to the view
         asteroids = new ArrayList<Asteroid>();
-        Asteroid ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        Asteroid ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
         asteroids.add(ast);
-        ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
         asteroids.add(ast);
-        ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
         asteroids.add(ast);
-        ast = new Asteroid(context, screenX, screenY, currentLevel-1);
+        ast = new Asteroid(context, screenWidth, screenHeight, currentLevel-1);
         asteroids.add(ast);
 
         // Build an army of invaders
         for(int i = 0; i < invaders.length; i ++ ){
-            invaders[i] = new UFO(context, i, screenX, screenY-(screenY/10));
+            invaders[i] = new UFO(context, i, screenWidth, screenHeight -(screenHeight /10));
         }
 
         // Build the shelters
@@ -240,7 +237,7 @@ public class MissionView extends SurfaceView implements Runnable{
         for(int shelterNumber = 0; shelterNumber < 4; shelterNumber++){
             for(int column = 0; column < 10; column ++ ) {
                 for (int row = 0; row < 5; row++) {
-                    bricks[numBricks] = new Barrier(row, column, shelterNumber, screenX, screenY-(screenY/10));
+                    bricks[numBricks] = new BarrierBrick(row, column, shelterNumber, screenWidth, screenHeight -(screenHeight /10));
                     numBricks++;
                 }
             }
@@ -315,11 +312,9 @@ public class MissionView extends SurfaceView implements Runnable{
         // Did an invader bump into the side of the screen
         boolean bumped = false;
 
-        // Has the player lost
-        boolean lost = false;
+        boolean lost = false;  // Has the player lost
 
-        // Move the player's ship
-        playerShip.update();
+        playerShip.update();   // Move the player's ship
 
         // Update all the invaders bullets
         updateInvaderBullets();
@@ -338,12 +333,9 @@ public class MissionView extends SurfaceView implements Runnable{
                 invaders[i].dropDownAndReverse();
 
                 // Have the invaders landed
-                if(invaders[i].getY() > screenY - screenY / 10){
+                if(invaders[i].getY() > screenHeight - screenHeight / 10){
                     lost = true;
                 }
-
-
-
             }
 
             // Increase the menace level
@@ -400,11 +392,11 @@ public class MissionView extends SurfaceView implements Runnable{
 
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
-            canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 50, screenY - 40, paint);
+            canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 50, screenHeight - 40, paint);
 
             // Drawing text for equation in different colors
             /*StringBuilder eq = equation.getEquation();
-            int prevLocation = screenX/3;
+            int prevLocation = screenWidth/3;
             int operatorIndex = 0;
             for(int i = 0; i<eq.length(); i++){
                 if(equation.isOperator(i)){
@@ -414,7 +406,7 @@ public class MissionView extends SurfaceView implements Runnable{
             }
             */
 
-            canvas.drawText(equation.toString(), screenX/3, 55, paint);
+            canvas.drawText(equation.toString(), screenWidth /3, 55, paint);
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
@@ -452,7 +444,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
-                Blaster bullet = new Blaster(screenY);
+                Blaster bullet = new Blaster(screenHeight);
                 playerBullets.add(bullet);
                 bullet.shoot(playerShip.getX() + playerShip.getLength() / 2, playerShip.getY(), bullet.UP);
                 soundPool.play(shootID, 1, 1, 0, 0, 1);
@@ -467,7 +459,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void updateInvaderBullets(){
         for(int i = 0; i < invadersBullets.length; i++){
-            if(invadersBullets[i].getImpactPointY() > screenY){
+            if(invadersBullets[i].getImpactPointY() > screenHeight){
                 invadersBullets[i].setInactive();
             }
 
@@ -482,7 +474,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void checkInvaderHitBricks(int i){
         for(int j = 0; j < numBricks; j++){
-            if(bricks[j].getVisibility()){
+            if(bricks[j].isAlive()){
                 if (RectF.intersects(invadersBullets[i].getRect(), bricks[j].getRect())){
                     // A collision has occurred
                     invadersBullets[i].setInactive();
@@ -520,7 +512,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public boolean updateInvaders(boolean bumped){
         for(int i = 0; i < numInvaders; i++){
-            if(invaders[i].getVisibility()) {
+            if(invaders[i].isAlive()) {
 
                 // Move the next invader
                 invaders[i].update(fps);
@@ -540,7 +532,7 @@ public class MissionView extends SurfaceView implements Runnable{
                 }
 
                 // If that move caused them to bump the screen change bumped to true
-                if (invaders[i].getX() > screenX - invaders[i].getLength()
+                if (invaders[i].getX() > screenWidth - invaders[i].getLength()
                         || invaders[i].getX() < 0){
 
                     bumped = true;
@@ -572,7 +564,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void checkPlayerHitInvader(int j){
         for (int i = 0; i < invaders.length; i++) {
-            if (invaders[i].getVisibility()) {
+            if (invaders[i].isAlive()) {
                 if (RectF.intersects(playerBullets.get(j).getRect(), invaders[i].getRect())) {
                     invaders[i].setInvisible();
                     soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
@@ -586,7 +578,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void checkPlayerHitBricks(int j){
         for (int i = 0; i < numBricks; i++) {
-            if (bricks[i].getVisibility()) {
+            if (bricks[i].isAlive()) {
                 if (RectF.intersects(playerBullets.get(j).getRect(), bricks[i].getRect())) {
                     // A collision has occurred
                     playerBullets.get(j).setInactive();
@@ -613,7 +605,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void drawInvaders(){
         for(int i = 0; i < numInvaders; i++) {
-            if (invaders[i].getVisibility()) {
+            if (invaders[i].isAlive()) {
                 if (uhOrOh) {
                     canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
                 } else {
@@ -625,7 +617,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void drawBricks(){
         for(int i = 0; i < numBricks; i++){
-            if(bricks[i].getVisibility()) {
+            if(bricks[i].isAlive()) {
                 canvas.drawRect(bricks[i].getRect(), paint);
             }
         }
@@ -659,7 +651,7 @@ public class MissionView extends SurfaceView implements Runnable{
             if(ast.isVisible()){
                 canvas.drawBitmap(ast.getBitmap(), ast.getX(), ast.getY(), paint);
                 paint.setColor(ast.getAsteroidOperator().getColor());
-                canvas.drawText(ast.getAsteroidOperator().getOperator(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);
+                canvas.drawText(ast.getAsteroidOperator().getOperatorChar(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);
             }
         }
     }

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.example.danyatazyeen.orderofoperations.R;
+import edu.augustana.dreamteam.orderofoperations.R;
 
 public class StartScreen extends AppCompatActivity {
 
@@ -15,8 +15,6 @@ public class StartScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
-        ImageView background = (ImageView) findViewById(R.id.startView);
 
         ImageButton startBTN = (ImageButton) findViewById(R.id.startButton);
 
