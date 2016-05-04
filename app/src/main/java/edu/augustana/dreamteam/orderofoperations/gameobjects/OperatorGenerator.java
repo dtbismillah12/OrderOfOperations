@@ -79,4 +79,8 @@ public class OperatorGenerator implements Comparable<OperatorGenerator>{
         indexInEquation = 4;
         colorCode = colors[indexInEquation];
     }
+
+    public boolean equals(OperatorGenerator other){
+        return (currentOperator.equals(other.currentOperator)) && (indexInEquation == other.indexInEquation);
+    }
 }

@@ -40,7 +40,7 @@ public class Equation {
             numOfOperators = 3;
         }
         constructEquation(levelsPassed);
-        createProperOperandOrder();
+        createProperOperatorOrder();
     }
 
     public StringBuilder getEquation(){
@@ -98,8 +98,8 @@ public class Equation {
         }
     }
 
-    public boolean isCorrectOperand(String operand, int index){
-        if(operatorOrder.peek().getOperator().equals(operand) && operatorOrder.peek().getIndex() == index){
+    public boolean isCorrectOperator(OperatorGenerator other){
+        if(operatorOrder.peek().equals(other)){
             operatorOrder.poll().makeInactive();
             return true;
         } else {
@@ -107,7 +107,7 @@ public class Equation {
         }
     }
 
-    private void createProperOperandOrder(){
+    private void createProperOperatorOrder(){
         Collections.sort(operators);
         for(int i=0; i< operators.size(); i++){
             operatorOrder.offer(operators.get(i));
