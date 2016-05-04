@@ -39,7 +39,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     private Context context;
 
-    // This is our thread
+    // Our game thread
     private Thread gameThread = null;
 
     // Our SurfaceHolder to lock the surface before we draw our graphics
@@ -52,14 +52,15 @@ public class MissionView extends SurfaceView implements Runnable{
     // Game is paused at the start
     private boolean paused = true;
 
-    // A Canvas and a Paint object
+    // A Canvas object to draw our bitmaps on and a Paint object to draw
+    // bullets and barriers.
     private Canvas canvas;
     private Paint paint;
 
     // This variable tracks the game frame rate
     private long fps;
 
-    // This is used to help calculate the fps
+    // This is used to help calculate the frames per second
     private long timeThisFrame;
 
     // The size of the screen in pixels
@@ -67,19 +68,22 @@ public class MissionView extends SurfaceView implements Runnable{
     private int screenY;
 
     private boolean contact;
-    // The players ship
+
+    // The player's ship
     private Spaceship playerShip;
 
-    // The player's bullet
+    // The player's pistol to fire bullets
     private ArrayList<Blaster> playerBullets;
 
-    // The invaders bullets
+    // The invader's bullets
     private int nextBullet;
     private int maxInvaderBullets = 50;
     private Blaster[] invadersBullets;
 
-    // Up to 60 invaders
+    // Setting number of invaders
     private int numInvaders = 6;
+
+    // Making array of UFOs the size of how many invaders there are
     private UFO[] invaders = new UFO[numInvaders];
 
     // The player's shelters are built from bricks
@@ -88,16 +92,22 @@ public class MissionView extends SurfaceView implements Runnable{
 
     private Random rand;
 
+    // ArrayList to store asteroids with operands in them
     private ArrayList<Asteroid> asteroids;
 
     private Equation equation;
 
+    // The level will be kept track of through and integer
+    // It will be incremented as the player progresses through expressions
     private int level;
 
+    // A SharedPreferences variable to help store high scores
     private SharedPreferences sharedPref;
+
+    // Keeps track of the player's final score for the current game
     private int finalScore;
 
-    // For sound FX
+    // For sound effects
     private SoundPool soundPool;
     private int playerExplodeID = -1;
     private int invaderExplodeID = -1;
@@ -108,7 +118,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     private int currentLevel;
 
-    // The score
+    // The score as the player accumulates points
     private int score = 0;
 
     // Lives
@@ -182,9 +192,16 @@ public class MissionView extends SurfaceView implements Runnable{
         prepareLevel(currentLevel-1);
     }
 
+    /*
+    This method restarts the the round with a new expression
+    @param levelsPassed: the level the player is on
+    */
     private void prepareLevel(int levelsPassed){
         numInvaders = 6;
+
+        //Set background of our view to the space graphic
         background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
+
         // Here we will initialize all the game objects
 
         // Make a new player space ship
@@ -200,6 +217,8 @@ public class MissionView extends SurfaceView implements Runnable{
         for(int i = 0; i<invadersBullets.length; i++){
             invadersBullets[i] = new Blaster(screenY);
         }
+
+        // Adding asteroids to the view
         asteroids = new ArrayList<Asteroid>();
         Asteroid ast = new Asteroid(context, screenX, screenY, currentLevel-1);
         asteroids.add(ast);
@@ -233,6 +252,10 @@ public class MissionView extends SurfaceView implements Runnable{
     }
 
     @Override
+    /*
+      Runs the game, calculates the frames per second,
+      plays the sounds for the approaching aliens
+     */
     public void run() {
         while (playing) {
 
@@ -255,7 +278,6 @@ public class MissionView extends SurfaceView implements Runnable{
                 fps = 1000 / timeThisFrame;
             }
 
-            // We will do something new here towards the end of the project
             // Play a sound based on the menace level
             if(!paused) {
                 if ((startFrameTime - lastMenaceTime)> menaceInterval) {
@@ -281,6 +303,12 @@ public class MissionView extends SurfaceView implements Runnable{
 
     }
 
+    /*
+    Checks if the aliens have bumped the side of the screen to move
+    them down if needed. Also checks if player has lost, save score
+    into finalScore; then retrieves high scores and checks if finalScore
+    is greater than one of them.
+     */
     private void update(){
 
         // Did an invader bump into the side of the screen
@@ -331,7 +359,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
 //            sharedPref = getSharedPreferences("HighScores", Context.MODE_PRIVATE);
 //            SharedPreferences.Editor editor = sharedPref.edit();
-//            editor.putStringSet("topFive", highScores);
+//            editor.putStringSet("topThree", highScores);
 
             //prepareLevel(currentLevel-1);
             score = 0;
@@ -341,17 +369,16 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
-
+    /*
+    Draws elements of the game view
+     */
     private void draw(){
         // Make sure our drawing surface is valid or we crash
         if (ourHolder.getSurface().isValid()) {
             // Lock the canvas ready to draw
             canvas = ourHolder.lockCanvas();
 
-            // Draw the background color
-            //canvas.drawColor(Color.argb(255, 221, 160, 221));
-
-            // Choose the brush color for drawing
+            // Setting brush color to white
             paint.setColor(Color.argb(255, 255, 255, 255));
 
 
