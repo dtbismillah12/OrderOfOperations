@@ -1,6 +1,7 @@
 package edu.augustana.dreamteam.orderofoperations.gui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -361,7 +362,7 @@ public class MissionView extends SurfaceView implements Runnable{
 //            SharedPreferences.Editor editor = sharedPref.edit();
 //            editor.putStringSet("topThree", highScores);
 
-            //prepareLevel(currentLevel-1);
+            prepareLevel(currentLevel-1);
             score = 0;
 
 
@@ -504,6 +505,13 @@ public class MissionView extends SurfaceView implements Runnable{
                 paused = true;
                 lives = 3;
                 score = 0;
+//                Intent startGame = new Intent(getContext(), ScoreScreen.class);
+//                startGame.setAction(startGame.ACTION_SEND);
+//                context.startActivity(startGame);
+
+
+                //Will eventually not need this line since once player loses lives,
+                // game will stop and score screen will be displayed
                 prepareLevel(currentLevel-1);
 
             }
