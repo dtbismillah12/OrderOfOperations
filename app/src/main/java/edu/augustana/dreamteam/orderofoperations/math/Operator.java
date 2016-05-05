@@ -26,7 +26,6 @@ public class Operator implements Comparable<Operator>{
         } else {
             operatorPriority = 4;
         }
-        indexInEquation = random.nextInt(4);
     }
 
     public Operator(int index){

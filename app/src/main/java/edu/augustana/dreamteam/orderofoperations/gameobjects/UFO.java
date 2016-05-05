@@ -53,7 +53,7 @@ public class UFO {
 
         isVisible = true;
 
-        int padding = screenX / 25;
+        int padding = screenX / 23;
 
         x = column * (length + padding);
         y = screenY-(9*screenY/10);
@@ -134,8 +134,6 @@ public class UFO {
             shipMoving = LEFT;
         }
         y = y + height;
-
-        //shipSpeed = shipSpeed * .5f;
     }
 
     public boolean takeAim(float playerShipX, float playerShipLength){

@@ -10,7 +10,7 @@ import java.util.Random;
  * Created by jeffreyprior on 4/13/16.
  */
 public class Equation {
-    private final char[] operands = {'%', '/', 'x', '-', '+'};
+    private final char[] possibleOperators = {'%', '/', '*', '-', '+'};
 
     private Random rand;
     private StringBuilder equation;
@@ -51,8 +51,8 @@ public class Equation {
     }
 
     public boolean isOperator(int index){
-        for(int i = 0; i < operands.length; i++){
-            if(equation.charAt(index) == operands[i]){
+        for(int i = 0; i < possibleOperators.length; i++){
+            if(equation.charAt(index) == possibleOperators[i]){
                 return true;
             }
         }
@@ -111,9 +111,10 @@ public class Equation {
     }
 
     private void createProperOperatorOrder(){
-        Collections.sort(operators);
-        for(int i=0; i< operators.size(); i++){
-            operatorOrder.offer(operators.get(i));
+        ArrayList<Operator> orderedList = operators;
+        Collections.sort(orderedList);
+        for(int i=0; i< orderedList.size(); i++){
+            operatorOrder.offer(orderedList.get(i));
         }
     }
 
@@ -130,5 +131,9 @@ public class Equation {
 
     public boolean correctEquation(){
         return operatorOrder.isEmpty();
+    }
+
+    public ArrayList<Operator> getOperators(){
+        return operators;
     }
 }

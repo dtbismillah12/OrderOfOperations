@@ -54,7 +54,7 @@ public class Asteroid {
         isVisible = true;
 
         //Initialize Operator Generator
-        myOperator = new Operator();
+        myOperator = new Operator(rand.nextInt(numOperators));
 
         // Initialize a blank RectF
         rect = new RectF();
