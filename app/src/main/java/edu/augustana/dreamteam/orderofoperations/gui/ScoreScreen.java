@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,10 +24,12 @@ public class ScoreScreen extends Activity {
     private SharedPreferences sharedPref;
     private Set<String> topFiveScores;
     private String[] topFive;
-
     private ImageView background;
     private ImageButton restartBTN;
     private ImageButton endBTN;
+    private Canvas canvas;
+    private Paint paint;
+    private SurfaceHolder holder;
 
     int finalScore;
 
@@ -41,7 +45,7 @@ public class ScoreScreen extends Activity {
 
         background = (ImageView) findViewById(R.id.endView);
         restartBTN = (ImageButton) findViewById(R.id.restartButton);
-        endBTN = (ImageButton) findViewById(R.id.endButton);
+        //endBTN = (ImageButton) findViewById(R.id.endButton);
 
 
         restartBTN.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +81,24 @@ public class ScoreScreen extends Activity {
             }
         }
 
+    }
+
+    private void draw(){
+        // Make sure our drawing surface is valid or we crash
+        if (holder.getSurface().isValid()) {
+            // Lock the canvas ready to draw
+            canvas = holder.lockCanvas();
+            paint.setTextSize(40);
+            paint.setColor(Color.argb(255, 255, 255, 255));
+
+            Intent scoreIntent = getIntent();
+            int finScore = scoreIntent.getIntExtra("score", 0);
+            int screenHeight = scoreIntent.getIntExtra("screenHeight", 0);
+
+            //canvas.drawText("Score: " + finScore + 5, screenHeight - 40, paint);
+            // Draw everything to the screen
+            holder.unlockCanvasAndPost(canvas);
+        }
     }
 
 
