@@ -51,18 +51,21 @@ public class ScoreScreen extends Activity {
         restartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View btn) {
-
+                Intent i = getBaseContext().getPackageManager()
+                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
             }
 
         });
-
-        endBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View btn) {
-                System.exit(0);
-            }
-
-        });
+//
+//        endBTN.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View btn) {
+//                System.exit(0);
+//            }
+//
+//        });
     }
 
 
