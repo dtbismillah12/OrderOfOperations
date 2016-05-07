@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import edu.augustana.dreamteam.orderofoperations.R;
 
 import java.util.Set;
+import java.util.StringTokenizer;
 
 
 public class ScoreScreen extends Activity {
@@ -69,8 +70,6 @@ public class ScoreScreen extends Activity {
     }
 
 
-
-
     //check if player's score is higher than the current highscore
     //if so, pop up window that notifies player
     public void checkHighScore(){
@@ -91,14 +90,26 @@ public class ScoreScreen extends Activity {
         if (holder.getSurface().isValid()) {
             // Lock the canvas ready to draw
             canvas = holder.lockCanvas();
-            paint.setTextSize(40);
-            paint.setColor(Color.argb(255, 255, 255, 255));
 
             Intent scoreIntent = getIntent();
             int finScore = scoreIntent.getIntExtra("score", 0);
             int screenHeight = scoreIntent.getIntExtra("screenHeight", 0);
 
-            //canvas.drawText("Score: " + finScore + 5, screenHeight - 40, paint);
+            String strTopScores = sharedPref.getString("topThree", "");
+            StringTokenizer st = new StringTokenizer(strTopScores, ",");
+            int[] highScores = new int[3];
+            for (int i = 0; i < highScores.length; i++) {
+                highScores[i] = Integer.parseInt(st.nextToken());
+            }
+
+            //Draw high scores in middle of screen
+            paint.setTextSize(40);
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            canvas.drawText("Top Score 1", 10, screenHeight - 150, paint);
+            canvas.drawText("Top Score 2", 10, screenHeight - 200, paint);
+            canvas.drawText("Top Score 3", 10, screenHeight - 250, paint);
+
+            canvas.drawText("Score: " + finScore, 5, screenHeight - 40, paint);
             // Draw everything to the screen
             holder.unlockCanvasAndPost(canvas);
         }
