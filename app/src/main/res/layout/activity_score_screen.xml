@@ -14,16 +14,19 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/scoreView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:background="@null"
             android:id="@+id/imageView"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/space_bg" />
+            android:src="@drawable/space_bg"
+            android:orientation="vertical"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="false" />
 
         <ImageView
             android:layout_width="243dp"
@@ -43,14 +46,54 @@
             android:src="@drawable/tryagain"
             android:layout_marginBottom="120dp" />
 
-        <ImageButton
+        <!--<SurfaceView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@null"-->
+            <!--android:id="@+id/surfView"-->
+            <!--android:layout_gravity="center" />-->
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/endButton"
-            android:layout_gravity="center_horizontal|bottom"
-            android:background="@null"
-            android:src="@drawable/endgame"
-            android:layout_marginBottom="50dp" />
+            android:text="@string/topScore3"
+            android:id="@+id/topScore3"
+            android:layout_gravity="left|center_vertical"
+            android:textSize="30dp"
+            android:textColor="#ffffff"
+            android:paddingTop="150dp"
+            android:paddingLeft="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/topScore2"
+            android:id="@+id/topScore2"
+            android:layout_gravity="left|center_vertical"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:paddingTop="90dp"
+            android:paddingLeft="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/topScore1"
+            android:id="@+id/topScore1"
+            android:layout_gravity="left|center_vertical"
+            android:textSize="30dp"
+            android:textColor="#ffffff"
+            android:paddingTop="30dp"
+            android:paddingLeft="50dp" />
+
+        <!--<ImageButton-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/endButton"-->
+            <!--android:layout_gravity="center_horizontal|bottom"-->
+            <!--android:background="@null"-->
+            <!--android:src="@drawable/endgame"-->
+            <!--android:layout_marginBottom="50dp" />-->
     </FrameLayout>
 
 </RelativeLayout>

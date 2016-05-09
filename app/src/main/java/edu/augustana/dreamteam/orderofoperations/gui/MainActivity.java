@@ -61,10 +61,8 @@ public class MainActivity extends Activity implements SensorEventListener{
     @Override
     protected void onPause() {
         super.onPause();
-
         // Tell the gameView pause method to execute
         spaceInvadersView.pause();
-
     }
 
     // Method called when change in reading of the sensor
