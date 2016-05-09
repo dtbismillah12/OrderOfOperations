@@ -127,6 +127,7 @@ public class MissionView extends SurfaceView implements Runnable{
     private long lastMenaceTime = System.currentTimeMillis();
 
     private Bitmap background;
+    private Bitmap restingBox;
 
     private int numOperators;
 
@@ -189,6 +190,8 @@ public class MissionView extends SurfaceView implements Runnable{
 
         //Set background of our view to the space graphic
         background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
+
+        restingBox = BitmapFactory.decodeResource(getResources(), R.drawable.wrong);
 
         prepareLevel(currentLevel-1);
     }
@@ -355,9 +358,9 @@ public class MissionView extends SurfaceView implements Runnable{
             // Setting brush color to white
             paint.setColor(Color.argb(255, 255, 255, 255));
 
-
             canvas.drawBitmap(background, 0, 0, paint);
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
+            canvas.drawBitmap(restingBox, screenWidth - 70, screenHeight - 87, paint);
 
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
