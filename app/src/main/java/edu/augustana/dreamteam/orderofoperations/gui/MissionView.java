@@ -131,7 +131,10 @@ public class MissionView extends SurfaceView implements Runnable{
     private long lastMenaceTime = System.currentTimeMillis();
 
     private Bitmap background;
-    private Bitmap restingBox;
+    private Bitmap feedbackBox;
+    private Bitmap noFeedbackBox;
+    private Bitmap wrongFeedbackBox;
+    private Bitmap correctFeedbackBox;
 
     private int numOperators;
 
@@ -195,7 +198,10 @@ public class MissionView extends SurfaceView implements Runnable{
         //Set background of our view to the space graphic
         background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
 
-        restingBox = BitmapFactory.decodeResource(getResources(), R.drawable.wrong);
+        noFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.gray);
+        wrongFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.wrong);
+        correctFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.right);
+        feedbackBox = noFeedbackBox;
 
         prepareLevel(currentLevel-1);
     }
@@ -273,21 +279,7 @@ public class MissionView extends SurfaceView implements Runnable{
             // Update the frame
             if(!paused){
                 update();
-            }
-
-            // Draw the frame
-            draw();
-
-            // Calculate the fps this frame
-            // We can then use the result to
-            // time animations and more.
-            timeThisFrame = System.currentTimeMillis() - startFrameTime;
-            if (timeThisFrame >= 1) {
-                fps = 1000 / timeThisFrame;
-            }
-
-            // Play a sound based on the menace level
-            if(!paused) {
+                draw();
                 if ((startFrameTime - lastMenaceTime)> menaceInterval) {
                     if (uhOrOh) {
                         // Play Uh
@@ -305,6 +297,13 @@ public class MissionView extends SurfaceView implements Runnable{
                 }
             }
 
+            // Calculate the fps this frame
+            // We can then use the result to
+            // time animations and more.
+            timeThisFrame = System.currentTimeMillis() - startFrameTime;
+            if (timeThisFrame >= 1) {
+                fps = 1000 / timeThisFrame;
+            }
         }
 
 
@@ -322,16 +321,10 @@ public class MissionView extends SurfaceView implements Runnable{
 
         boolean lost = false;  // Has the player lost
 
-        playerShip.update();   // Move the player's ship
-
-        // Update all the invaders bullets
+        playerShip.update();
         updateInvaderBullets();
-
-        // Update all the invaders if visible
-       updateInvaders();
-
+        updateInvaders();
         updateAsteroids();
-
         updatePlayerBullets();
 
         if(lost){
@@ -368,7 +361,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
             canvas.drawBitmap(background, 0, 0, paint);
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
-            canvas.drawBitmap(restingBox, screenWidth - 70, screenHeight - 87, paint);
+            canvas.drawBitmap(feedbackBox, screenWidth - 70, screenHeight - 87, paint);
 
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
@@ -568,6 +561,7 @@ public class MissionView extends SurfaceView implements Runnable{
                         soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
                         score = score + 50;
+                        feedbackBox = correctFeedbackBox;
                         if(equation.correctEquation()){
                             playerWon();
                         }
@@ -576,6 +570,7 @@ public class MissionView extends SurfaceView implements Runnable{
                         soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
                         score = score - 50;
+                        feedbackBox = wrongFeedbackBox;
                     }
                 }
             }
