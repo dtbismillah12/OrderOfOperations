@@ -1,6 +1,7 @@
 package edu.augustana.dreamteam.orderofoperations.gui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -9,9 +10,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,6 +27,7 @@ import edu.augustana.dreamteam.orderofoperations.R;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 //import static android.support.v4.app.ActivityCompat.startActivity;
 
@@ -54,6 +58,7 @@ public class MissionView extends SurfaceView implements Runnable{
     // A Canvas object to draw our bitmaps on and a Paint object to draw
     // bullets and barriers.
     private Canvas canvas;
+    private Canvas boxes;
     private Paint paint;
 
     // This variable tracks the game frame rate
@@ -127,8 +132,14 @@ public class MissionView extends SurfaceView implements Runnable{
     private long lastMenaceTime = System.currentTimeMillis();
 
     private Bitmap background;
+    private Bitmap rightBox;
+    private Bitmap wrongBox;
+    private Bitmap restingBox;
 
     private int numOperators;
+
+    int length = screenWidth/10;
+    int height = screenHeight/25;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
@@ -329,11 +340,15 @@ public class MissionView extends SurfaceView implements Runnable{
 
         if(lost){
             finalScore = score;
-            //Set<String> highScores = new String[] {0,0,0};
 
-//            sharedPref = getSharedPreferences("HighScores", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedPref.edit();
-//            editor.putStringSet("topThree", highScores);
+            sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+            int[] topScores = new int[3];
+            StringBuilder strbuilder = new StringBuilder();
+            for (int i = 0; i < topScores.length; i++) {
+                strbuilder.append(topScores[i]).append(",");
+            }
+            SharedPreferences.Editor editor = sharedPref.edit();
+            sharedPref.edit().putString("topThree", strbuilder.toString());
 
             prepareLevel(currentLevel-1);
             score = 0;
@@ -357,6 +372,9 @@ public class MissionView extends SurfaceView implements Runnable{
 
 
             canvas.drawBitmap(background, 0, 0, paint);
+            restingBox = BitmapFactory.decodeResource(getResources(), R.drawable.gray);
+            canvas.drawBitmap(restingBox,  screenWidth - 70, screenHeight - 87, paint);
+
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
 
             paint.setColor(Color.argb(255, 249, 129, 0));
@@ -400,9 +418,6 @@ public class MissionView extends SurfaceView implements Runnable{
     public void pause() {
         playing = false;
         try {
-//            Intent startGame = new Intent(getContext(), ScoreScreen.class);
-//            startGame.setAction(startGame.ACTION_SEND);
-//            context.startActivity(startGame);
             gameThread.join();
         } catch (InterruptedException e) {
             Log.e("Error:", "joining thread");
@@ -436,7 +451,7 @@ public class MissionView extends SurfaceView implements Runnable{
     }
 
     public void updateShipMovement(float xAccel){
-        playerShip.updateShipSpeed(-1*xAccel);
+        playerShip.updateShipSpeed(-1 * xAccel);
     }
 
     public void updateInvaderBullets(){
@@ -555,7 +570,12 @@ public class MissionView extends SurfaceView implements Runnable{
             if (asteroids.get(i).isVisible()) {
                 Asteroid ast = asteroids.get(i);
                 if (RectF.intersects(playerBullets.get(j).getRect(), ast.getRect())) {
+                    boxes = ourHolder.lockCanvas();
                     if(equation.isCorrectOperator(ast.getAsteroidOperator())){
+                        //draw green box feedback for correct hit
+                        rightBox = BitmapFactory.decodeResource(getResources(), R.drawable.right);
+                        boxes.drawBitmap(rightBox, screenWidth - 70, screenHeight - 87, paint);
+
                         asteroids.remove(i);
                         soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
@@ -564,6 +584,10 @@ public class MissionView extends SurfaceView implements Runnable{
                             playerWon();
                         }
                     } else {
+                        //draw red box feedback for incorrect hit
+                        wrongBox = BitmapFactory.decodeResource(getResources(), R.drawable.wrong);
+                        boxes.drawBitmap(wrongBox,  screenWidth - 70, screenHeight - 87, paint);
+
                         asteroids.remove(i);
                         soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
@@ -659,15 +683,14 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void playerLost(){
         paused = true;
-        score = 0;
-//                Intent startGame = new Intent(getContext(), ScoreScreen.class);
-//                startGame.setAction(startGame.ACTION_SEND);
-//                context.startActivity(startGame);
+        //score = 0;
 
-
-        //Will eventually not need this line since once player loses lives,
-        // game will stop and score screen will be displayed
-        prepareLevel(currentLevel-1);
+        //launches score screen and sends over player's score
+        Intent endGame = new Intent(context.getApplicationContext(), ScoreScreen.class);
+        endGame.setAction(endGame.ACTION_SEND);
+        endGame.putExtra("score", score);
+        endGame.putExtra("screenHeight", screenHeight);
+        context.startActivity(endGame);
     }
 
     public void playerWon(){
