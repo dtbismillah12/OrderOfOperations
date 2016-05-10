@@ -70,8 +70,6 @@ public class MissionView extends SurfaceView implements Runnable{
     private int screenWidth;
     private int screenHeight;
 
-    private boolean contact;
-
     // The player's ship
     private Spaceship playerShip;
 
@@ -92,8 +90,6 @@ public class MissionView extends SurfaceView implements Runnable{
     // The player's shelters are built from bricks
     private BarrierBrick[] bricks = new BarrierBrick[400];
     private int numBricks;
-
-    private Random rand;
 
     // ArrayList to store asteroids with operands in them
     private ArrayList<Asteroid> asteroids;
@@ -157,8 +153,6 @@ public class MissionView extends SurfaceView implements Runnable{
 
         screenWidth = x;
         screenHeight = y;
-
-        rand = new Random();
 
         // This SoundPool is deprecated but don't worry
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
@@ -279,7 +273,11 @@ public class MissionView extends SurfaceView implements Runnable{
             // Update the frame
             if(!paused){
                 update();
-                draw();
+            }
+
+            draw();
+
+            if(!paused){
                 if ((startFrameTime - lastMenaceTime)> menaceInterval) {
                     if (uhOrOh) {
                         // Play Uh
@@ -374,25 +372,11 @@ public class MissionView extends SurfaceView implements Runnable{
             drawBricks();
             drawPlayBullets();
             drawInvadBullets();
+            drawEquationText();
 
-            paint.setColor(Color.argb(255, 249, 129, 0));
+            paint.setColor(Color.argb(255, 68, 6, 117));
             paint.setTextSize(40);
             canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 5, screenHeight - 40, paint);
-
-            // Drawing text for equation in different colors
-            StringBuilder eq = equation.getEquation();
-            int location = screenWidth/(numOperators+1);
-            int operatorIndex = 0;
-            for(int i = 0; i<eq.length(); i++){
-                if(equation.isOperator(i)){
-                    paint.setColor(colors[equation.getOperators().get(operatorIndex).getIndex()]);
-                    operatorIndex++;
-                } else {
-                    paint.setColor(colors[4]);
-                }
-                canvas.drawText(eq.substring(i, i+1), location, 55, paint);
-                location += 40;
-            }
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
@@ -680,6 +664,22 @@ public class MissionView extends SurfaceView implements Runnable{
     public void invadersClosing(){
         for(int i = 0; i<invaders.length; i++){
             invaders[i].dropDownAndReverse();
+        }
+    }
+
+    private void drawEquationText(){
+        StringBuilder eq = equation.getEquation();
+        int location = screenWidth/(numOperators+1);
+        int operatorIndex = 0;
+        for(int i = 0; i<eq.length(); i++){
+            if(equation.isOperator(i)){
+                paint.setColor(colors[equation.getOperators().get(operatorIndex).getIndex()]);
+                operatorIndex++;
+            } else {
+                paint.setColor(Color.argb(255, 68, 6, 117));
+            }
+            canvas.drawText(eq.substring(i, i+1), location, 55, paint);
+            location += 40;
         }
     }
 }
