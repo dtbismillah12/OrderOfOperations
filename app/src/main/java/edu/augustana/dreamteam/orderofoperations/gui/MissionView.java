@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -58,7 +59,6 @@ public class MissionView extends SurfaceView implements Runnable{
     // A Canvas object to draw our bitmaps on and a Paint object to draw
     // bullets and barriers.
     private Canvas canvas;
-    private Canvas boxes;
     private Paint paint;
 
     // This variable tracks the game frame rate
@@ -70,8 +70,6 @@ public class MissionView extends SurfaceView implements Runnable{
     // The size of the screen in pixels
     private int screenWidth;
     private int screenHeight;
-
-    private boolean contact;
 
     // The player's ship
     private Spaceship playerShip;
@@ -132,14 +130,17 @@ public class MissionView extends SurfaceView implements Runnable{
     private long lastMenaceTime = System.currentTimeMillis();
 
     private Bitmap background;
-    private Bitmap rightBox;
-    private Bitmap wrongBox;
-    private Bitmap restingBox;
+    private Bitmap feedbackBox;
+    private Bitmap noFeedbackBox;
+    private Bitmap wrongFeedbackBox;
+    private Bitmap correctFeedbackBox;
 
     private int numOperators;
 
     int length = screenWidth/10;
     int height = screenHeight/25;
+    private SharedPreferences.Editor editor;
+    private String path;
 
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
@@ -161,7 +162,6 @@ public class MissionView extends SurfaceView implements Runnable{
         screenWidth = x;
         screenHeight = y;
 
-        rand = new Random();
 
         // This SoundPool is deprecated but don't worry
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
@@ -200,6 +200,10 @@ public class MissionView extends SurfaceView implements Runnable{
 
         //Set background of our view to the space graphic
         background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
+
+        noFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.gray);
+        wrongFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.wrong);
+        correctFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.right);
 
         prepareLevel(currentLevel-1);
     }
@@ -261,6 +265,7 @@ public class MissionView extends SurfaceView implements Runnable{
         // Reset the menace level
         menaceInterval = 1000;
 
+        feedbackBox = noFeedbackBox;
     }
 
     @Override
@@ -282,16 +287,8 @@ public class MissionView extends SurfaceView implements Runnable{
             // Draw the frame
             draw();
 
-            // Calculate the fps this frame
-            // We can then use the result to
-            // time animations and more.
-            timeThisFrame = System.currentTimeMillis() - startFrameTime;
-            if (timeThisFrame >= 1) {
-                fps = 1000 / timeThisFrame;
-            }
 
-            // Play a sound based on the menace level
-            if(!paused) {
+            if(!paused){
                 if ((startFrameTime - lastMenaceTime)> menaceInterval) {
                     if (uhOrOh) {
                         // Play Uh
@@ -309,9 +306,14 @@ public class MissionView extends SurfaceView implements Runnable{
                 }
             }
 
+            // Calculate the fps this frame
+            // We can then use the result to
+            // time animations and more.
+            timeThisFrame = System.currentTimeMillis() - startFrameTime;
+            if (timeThisFrame >= 1) {
+                fps = 1000 / timeThisFrame;
+            }
         }
-
-
 
     }
 
@@ -323,38 +325,15 @@ public class MissionView extends SurfaceView implements Runnable{
      */
     private void update(){
         addAsteroids();
-
         boolean lost = false;  // Has the player lost
-
         playerShip.update();   // Move the player's ship
-
-        // Update all the invaders bullets
-        updateInvaderBullets();
-
-        // Update all the invaders if visible
-       updateInvaders();
-
+        updateInvaderBullets();  // Update all the invaders bullets
+        updateInvaders();  // Update all the invaders if visible
         updateAsteroids();
-
         updatePlayerBullets();
 
-        if(lost){
-            finalScore = score;
-
-            sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            int[] topScores = new int[3];
-            StringBuilder strbuilder = new StringBuilder();
-            for (int i = 0; i < topScores.length; i++) {
-                strbuilder.append(topScores[i]).append(",");
-            }
-            SharedPreferences.Editor editor = sharedPref.edit();
-            sharedPref.edit().putString("topThree", strbuilder.toString());
-
-            prepareLevel(currentLevel-1);
-            score = 0;
-
-
-
+        if(equation.correctEquation()){
+            playerWon();
         }
     }
 
@@ -372,10 +351,8 @@ public class MissionView extends SurfaceView implements Runnable{
 
 
             canvas.drawBitmap(background, 0, 0, paint);
-            restingBox = BitmapFactory.decodeResource(getResources(), R.drawable.gray);
-            canvas.drawBitmap(restingBox,  screenWidth - 70, screenHeight - 87, paint);
-
             canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
+            canvas.drawBitmap(feedbackBox, screenWidth - 70, screenHeight - 87, paint);
 
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
@@ -388,25 +365,11 @@ public class MissionView extends SurfaceView implements Runnable{
             drawBricks();
             drawPlayBullets();
             drawInvadBullets();
+            drawEquationText();
 
-            paint.setColor(Color.argb(255, 249, 129, 0));
+            paint.setColor(Color.argb(255, 68, 6, 117));
             paint.setTextSize(40);
             canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 5, screenHeight - 40, paint);
-
-            // Drawing text for equation in different colors
-            StringBuilder eq = equation.getEquation();
-            int location = screenWidth/(numOperators+1);
-            int operatorIndex = 0;
-            for(int i = 0; i<eq.length(); i++){
-                if(equation.isOperator(i)){
-                    paint.setColor(colors[equation.getOperators().get(operatorIndex).getIndex()]);
-                    operatorIndex++;
-                } else {
-                    paint.setColor(colors[4]);
-                }
-                canvas.drawText(eq.substring(i, i+1), location, 55, paint);
-                location += 40;
-            }
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);
@@ -570,28 +533,18 @@ public class MissionView extends SurfaceView implements Runnable{
             if (asteroids.get(i).isVisible()) {
                 Asteroid ast = asteroids.get(i);
                 if (RectF.intersects(playerBullets.get(j).getRect(), ast.getRect())) {
-                    boxes = ourHolder.lockCanvas();
                     if(equation.isCorrectOperator(ast.getAsteroidOperator())){
-                        //draw green box feedback for correct hit
-                        rightBox = BitmapFactory.decodeResource(getResources(), R.drawable.right);
-                        boxes.drawBitmap(rightBox, screenWidth - 70, screenHeight - 87, paint);
-
                         asteroids.remove(i);
                         soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
                         score = score + 50;
-                        if(equation.correctEquation()){
-                            playerWon();
-                        }
+                        feedbackBox = correctFeedbackBox;
                     } else {
-                        //draw red box feedback for incorrect hit
-                        wrongBox = BitmapFactory.decodeResource(getResources(), R.drawable.wrong);
-                        boxes.drawBitmap(wrongBox,  screenWidth - 70, screenHeight - 87, paint);
-
                         asteroids.remove(i);
                         soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
                         score = score - 50;
+                        feedbackBox = wrongFeedbackBox;
                     }
                 }
             }
@@ -673,17 +626,19 @@ public class MissionView extends SurfaceView implements Runnable{
     public void drawAsteroids() {
         for(int i = 0; i < asteroids.size(); i++) {
             Asteroid ast = asteroids.get(i);
-            if(ast.isVisible()){
+            if (ast.isVisible()) {
                 canvas.drawBitmap(ast.getBitmap(), ast.getX(), ast.getY(), paint);
                 paint.setColor(colors[ast.getAsteroidOperator().getIndex()]);
                 canvas.drawText(ast.getAsteroidOperator().getOperatorChar(), ast.getX() + (ast.getWidth() / 4), ast.getY() + (ast.getHeight() / 2) + 10, paint);
             }
         }
     }
-
+    /*
+        Launches the Score screen and initializes high scores to zero if the game has never been
+        played before on the specific device.
+     */
     public void playerLost(){
         paused = true;
-        //score = 0;
 
         //launches score screen and sends over player's score
         Intent endGame = new Intent(context.getApplicationContext(), ScoreScreen.class);
@@ -691,6 +646,27 @@ public class MissionView extends SurfaceView implements Runnable{
         endGame.putExtra("score", score);
         endGame.putExtra("screenHeight", screenHeight);
         context.startActivity(endGame);
+
+
+        System.out.println("Absolute Path: " + Environment.getExternalStorageDirectory().getAbsolutePath());
+
+        finalScore = score;
+        sharedPref = context.getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
+        if (sharedPref.getString("first", "").equals("")){
+            editor.putString("first", "30");
+
+        }
+        if (sharedPref.getString("second", "").equals("")){
+            editor.putString("second", "20");
+
+        }
+        if (sharedPref.getString("second", "").equals("")) {
+            editor.putString("third", "3");
+        }
+
+        editor.apply();
     }
 
     public void playerWon(){
@@ -701,6 +677,22 @@ public class MissionView extends SurfaceView implements Runnable{
     public void invadersClosing(){
         for(int i = 0; i<invaders.length; i++){
             invaders[i].dropDownAndReverse();
+        }
+    }
+
+    private void drawEquationText(){
+        StringBuilder eq = equation.getEquation();
+        int location = screenWidth/(numOperators+1);
+        int operatorIndex = 0;
+        for(int i = 0; i<eq.length(); i++){
+            if(equation.isOperator(i)){
+                paint.setColor(colors[equation.getOperators().get(operatorIndex).getIndex()]);
+                operatorIndex++;
+            } else {
+                paint.setColor(Color.argb(255, 68, 6, 117));
+            }
+            canvas.drawText(eq.substring(i, i+1), location, 55, paint);
+            location += 40;
         }
     }
 }
