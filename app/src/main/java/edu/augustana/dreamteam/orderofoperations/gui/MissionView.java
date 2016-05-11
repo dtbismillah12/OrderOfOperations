@@ -195,7 +195,6 @@ public class MissionView extends SurfaceView implements Runnable{
         noFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.gray);
         wrongFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.wrong);
         correctFeedbackBox = BitmapFactory.decodeResource(getResources(), R.drawable.right);
-        feedbackBox = noFeedbackBox;
 
         prepareLevel(currentLevel-1);
     }
@@ -253,10 +252,10 @@ public class MissionView extends SurfaceView implements Runnable{
             }
         }
 
-
         // Reset the menace level
         menaceInterval = 1000;
 
+        feedbackBox = noFeedbackBox;
     }
 
     @Override
@@ -339,9 +338,10 @@ public class MissionView extends SurfaceView implements Runnable{
 
             prepareLevel(currentLevel-1);
             score = 0;
+        }
 
-
-
+        if(equation.correctEquation()){
+            playerWon();
         }
     }
 
@@ -546,9 +546,6 @@ public class MissionView extends SurfaceView implements Runnable{
                         playerBullets.get(j).setInactive();
                         score = score + 50;
                         feedbackBox = correctFeedbackBox;
-                        if(equation.correctEquation()){
-                            playerWon();
-                        }
                     } else {
                         asteroids.remove(i);
                         soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);

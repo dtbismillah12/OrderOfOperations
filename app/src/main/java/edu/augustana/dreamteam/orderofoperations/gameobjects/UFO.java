@@ -140,7 +140,7 @@ public class UFO {
         // If near the player
         if((playerShipX + playerShipLength > x && playerShipX + playerShipLength < x + length) ||
                 (playerShipX > x && playerShipX < x + length)) {
-            if(generator.nextInt(2) == 0) {
+            if(generator.nextInt(20) == 0) {
                 return true;
             }
         } else {
