@@ -136,9 +136,9 @@ public class Equation {
             return operators.get(rand.nextInt(operators.size()));
         } else {
             if(rand.nextInt(5)==0){
-                return operators.get(rand.nextInt(operators.size()));
-            } else {
                 return operatorOrder.peek();
+            } else {
+                return new Operator(String.valueOf(possibleOperators[rand.nextInt(5)]),rand.nextInt(5));
             }
         }
     }
