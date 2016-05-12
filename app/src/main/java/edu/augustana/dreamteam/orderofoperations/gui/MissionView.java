@@ -607,7 +607,7 @@ public class MissionView extends SurfaceView implements Runnable{
     public void addAsteroids(){
         long timeDiff = System.currentTimeMillis() - startTime;
         if(timeDiff > 2500){
-            Asteroid ast = new Asteroid(context, screenWidth, screenHeight, numOperators);
+            Asteroid ast = new Asteroid(context, screenWidth, screenHeight, numOperators, equation.getAnOperator());
             asteroids.add(ast);
             startTime = System.currentTimeMillis();
         }

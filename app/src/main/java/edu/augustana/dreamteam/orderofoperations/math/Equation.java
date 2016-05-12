@@ -133,6 +133,18 @@ public class Equation {
         return operatorOrder.isEmpty();
     }
 
+    public String getAnOperator(){
+        if(operatorOrder.size()>1){
+            return operators.get(rand.nextInt(operators.size())).getOperatorChar();
+        } else {
+            if(rand.nextInt(5)==0){
+                return operators.get(rand.nextInt(operators.size())).getOperatorChar();
+            } else {
+                return String.valueOf(possibleOperators[rand.nextInt(5)]);
+            }
+        }
+    }
+
     public ArrayList<Operator> getOperators(){
         return operators;
     }

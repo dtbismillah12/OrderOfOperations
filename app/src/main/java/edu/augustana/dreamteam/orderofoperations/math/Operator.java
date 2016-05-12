@@ -32,6 +32,11 @@ public class Operator implements Comparable<Operator>{
         this();
         indexInEquation = index;
     }
+    
+    public Operator(String op, int index){
+        this(index);
+        opChar = op;
+    }
 
     public String getOperatorChar(){
         return opChar;
