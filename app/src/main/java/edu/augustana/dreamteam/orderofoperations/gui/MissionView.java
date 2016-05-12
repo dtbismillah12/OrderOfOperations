@@ -41,6 +41,8 @@ public class MissionView extends SurfaceView implements Runnable{
 
     private Context context;
 
+    private boolean uhOrOh = false;
+
     private long startTime = System.currentTimeMillis();
 
     // Our game thread
@@ -83,7 +85,7 @@ public class MissionView extends SurfaceView implements Runnable{
     private Blaster[] invadersBullets;
 
     // Setting number of invaders
-    private int numInvaders = 6;
+    private int numInvaders;
 
     // Making array of UFOs the size of how many invaders there are
     private UFO[] invaders;
@@ -91,8 +93,6 @@ public class MissionView extends SurfaceView implements Runnable{
     // The player's shelters are built from bricks
     private BarrierBrick[] bricks = new BarrierBrick[400];
     private int numBricks;
-
-    private Random rand;
 
     // ArrayList to store asteroids with operands in them
     private ArrayList<Asteroid> asteroids;
@@ -105,15 +105,6 @@ public class MissionView extends SurfaceView implements Runnable{
     // Keeps track of the player's final score for the current game
     private int finalScore;
 
-    // For sound effects
-    private SoundPool soundPool;
-    private int playerExplodeID = -1;
-    private int invaderExplodeID = -1;
-    private int shootID = -1;
-    private int damageShelterID = -1;
-    private int uhID = -1;
-    private int ohID = -1;
-
     private int currentLevel;
 
     // The score as the player accumulates points
@@ -121,13 +112,6 @@ public class MissionView extends SurfaceView implements Runnable{
 
     // Lives
     private int lives;
-
-    // How menacing should the sound be?
-    private long menaceInterval = 1000;
-    // Which menace sound should play next
-    private boolean uhOrOh;
-    // When did we last play a menacing sound
-    private long lastMenaceTime = System.currentTimeMillis();
 
     private Bitmap background;
     private Bitmap feedbackBox;
@@ -162,42 +146,6 @@ public class MissionView extends SurfaceView implements Runnable{
         screenWidth = x;
         screenHeight = y;
 
-
-        // This SoundPool is deprecated but don't worry
-        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
-
-        try{
-            // Create objects of the 2 required classes
-            AssetManager assetManager = context.getAssets();
-            AssetFileDescriptor descriptor;
-
-            // Load our fx in memory ready for use
-            descriptor = assetManager.openFd("shoot.ogg");
-            shootID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("invaderexplode.ogg");
-            invaderExplodeID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("damageshelter.ogg");
-            damageShelterID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("playerexplode.ogg");
-            playerExplodeID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("damageshelter.ogg");
-            damageShelterID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("uh.ogg");
-            uhID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("oh.ogg");
-            ohID = soundPool.load(descriptor, 0);
-
-        }catch(IOException e){
-            // Print an error message to the console
-            Log.e("error", "failed to load sound files");
-        }
-
         //Set background of our view to the space graphic
         background = BitmapFactory.decodeResource(getResources(), R.drawable.space_bg);
 
@@ -215,6 +163,8 @@ public class MissionView extends SurfaceView implements Runnable{
     private void prepareLevel(int levelsPassed){
         currentLevel = levelsPassed + 1;
         // Here we will initialize all the game objects
+
+        numInvaders = 6;
 
         //TODO: the rest of this basically looks model-related, goes into GameArena
         // Make a new player space ship
@@ -261,10 +211,6 @@ public class MissionView extends SurfaceView implements Runnable{
             }
         }
 
-
-        // Reset the menace level
-        menaceInterval = 1000;
-
         feedbackBox = noFeedbackBox;
     }
 
@@ -286,25 +232,6 @@ public class MissionView extends SurfaceView implements Runnable{
 
             // Draw the frame
             draw();
-
-
-            if(!paused){
-                if ((startFrameTime - lastMenaceTime)> menaceInterval) {
-                    if (uhOrOh) {
-                        // Play Uh
-                        soundPool.play(uhID, 1, 1, 0, 0, 1);
-
-                    } else {
-                        // Play Oh
-                        soundPool.play(ohID, 1, 1, 0, 0, 1);
-                    }
-
-                    // Reset the last menace time
-                    lastMenaceTime = System.currentTimeMillis();
-                    // Alter value of uhOrOh
-                    uhOrOh = !uhOrOh;
-                }
-            }
 
             // Calculate the fps this frame
             // We can then use the result to
@@ -407,7 +334,6 @@ public class MissionView extends SurfaceView implements Runnable{
                 Blaster bullet = new Blaster(screenHeight);
                 playerBullets.add(bullet);
                 bullet.shoot(playerShip.getX() + playerShip.getLength() / 2, playerShip.getY(), bullet.UP);
-                soundPool.play(shootID, 1, 1, 0, 0, 1);
                 break;
         }
         return true;
@@ -439,7 +365,6 @@ public class MissionView extends SurfaceView implements Runnable{
                     // A collision has occurred
                     invadersBullets[i].setInactive();
                     bricks[j].setInvisible();
-                    soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
                 }
             }
         }
@@ -449,7 +374,6 @@ public class MissionView extends SurfaceView implements Runnable{
         if (RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
             invadersBullets[i].setInactive();
             lives --;
-            soundPool.play(playerExplodeID, 1, 1, 0, 0, 1);
             playerShip.destroyShip(lives);
 
             // Is it game over?
@@ -477,6 +401,9 @@ public class MissionView extends SurfaceView implements Runnable{
                 if (invaders[i].getX() > screenWidth - invaders[i].getLength()
                         || invaders[i].getX() < 0){
                     invadersClosing();
+                }
+                if(currentLevel>15){
+                    invaders[i].increaseChanceOfFire(2);
                 }
             }
             if (invaders[i].getY() > screenHeight - screenHeight / 10) {
@@ -506,7 +433,6 @@ public class MissionView extends SurfaceView implements Runnable{
             if (invaders[i].isAlive()) {
                 if (RectF.intersects(playerBullets.get(j).getRect(), invaders[i].getRect())) {
                     invaders[i].setInvisible();
-                    soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                     playerBullets.get(j).setInactive();
                     score = score + 10;
                     numInvaders--;
@@ -522,7 +448,6 @@ public class MissionView extends SurfaceView implements Runnable{
                     // A collision has occurred
                     playerBullets.get(j).setInactive();
                     bricks[i].setInvisible();
-                    soundPool.play(damageShelterID, 1, 1, 0, 0, 1);
                 }
             }
         }
@@ -535,13 +460,11 @@ public class MissionView extends SurfaceView implements Runnable{
                 if (RectF.intersects(playerBullets.get(j).getRect(), ast.getRect())) {
                     if(equation.isCorrectOperator(ast.getAsteroidOperator())){
                         asteroids.remove(i);
-                        soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
                         score = score + 50;
                         feedbackBox = correctFeedbackBox;
                     } else {
                         asteroids.remove(i);
-                        soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                         playerBullets.get(j).setInactive();
                         score = score - 50;
                         feedbackBox = wrongFeedbackBox;
@@ -557,7 +480,6 @@ public class MissionView extends SurfaceView implements Runnable{
             if (RectF.intersects(playerShip.getRect(), ast.getRect())) {
                 ast.setInvisible();
                 asteroids.remove(i);
-                soundPool.play(invaderExplodeID, 1, 1, 0, 0, 1);
                 lives--;
                 playerShip.destroyShip(lives);
 
@@ -573,8 +495,10 @@ public class MissionView extends SurfaceView implements Runnable{
             if (invaders[i].isAlive()) {
                 if (uhOrOh) {
                     canvas.drawBitmap(invaders[i].getBitmap(), invaders[i].getX(), invaders[i].getY(), paint);
+                    uhOrOh = false;
                 } else {
                     canvas.drawBitmap(invaders[i].getBitmap2(), invaders[i].getX(), invaders[i].getY(), paint);
+                    uhOrOh = true;
                 }
             }
         }
@@ -606,7 +530,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
     public void addAsteroids(){
         long timeDiff = System.currentTimeMillis() - startTime;
-        if(timeDiff > 2500){
+        if(timeDiff > 3000 && asteroids.size() <= 3){
             Asteroid ast = new Asteroid(context, screenWidth, screenHeight, numOperators, equation.getAnOperator());
             asteroids.add(ast);
             startTime = System.currentTimeMillis();
@@ -681,17 +605,15 @@ public class MissionView extends SurfaceView implements Runnable{
     }
 
     private void drawEquationText(){
-        StringBuilder eq = equation.getEquation();
+        ArrayList<EquationTerm> equationTerms = equation.getEquation();
         int location = screenWidth/(numOperators+1);
-        int operatorIndex = 0;
-        for(int i = 0; i<eq.length(); i++){
-            if(equation.isOperator(i)){
-                paint.setColor(colors[equation.getOperators().get(operatorIndex).getIndex()]);
-                operatorIndex++;
+        for(int i = 0; i<equationTerms.size(); i++){
+            if(equationTerms.get(i).isOperator()){
+                paint.setColor(colors[equationTerms.get(i).getOperator().getIndex()]);
             } else {
                 paint.setColor(Color.argb(255, 68, 6, 117));
             }
-            canvas.drawText(eq.substring(i, i+1), location, 55, paint);
+            canvas.drawText(equationTerms.get(i).getTerm(), location, 55, paint);
             location += 40;
         }
     }

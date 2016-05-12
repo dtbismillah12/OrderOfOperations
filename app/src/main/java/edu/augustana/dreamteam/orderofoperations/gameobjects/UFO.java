@@ -40,8 +40,9 @@ public class UFO {
     // Is the ship moving and in which direction
     private int shipMoving = RIGHT;
 
-    boolean isVisible;
+    private boolean isVisible;
 
+    private int chanceOfFire;
 
     public UFO (Context context, int column, int screenX, int screenY) {
 
@@ -52,6 +53,8 @@ public class UFO {
         height = screenY / 20;
 
         isVisible = true;
+
+        chanceOfFire = 30;
 
         int padding = screenX / 23;
 
@@ -140,7 +143,7 @@ public class UFO {
         // If near the player
         if((playerShipX + playerShipLength > x && playerShipX + playerShipLength < x + length) ||
                 (playerShipX > x && playerShipX < x + length)) {
-            if(generator.nextInt(20) == 0) {
+            if(generator.nextInt(chanceOfFire) == 0) {
                 return true;
             }
         } else {
@@ -149,5 +152,9 @@ public class UFO {
             }
         }
         return false;
+    }
+
+    public void increaseChanceOfFire(int factor){
+        chanceOfFire = chanceOfFire / factor;
     }
 }

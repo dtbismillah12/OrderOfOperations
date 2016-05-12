@@ -8,19 +8,18 @@ import java.util.Random;
  * Created by jeffreyprior on 4/13/16.
  */
 public class Operator implements Comparable<Operator>{
-    private static final String[] operands = {"%", "/", "*", "-", "+"};
+    private static final String[] operators = {"%", "/", "*", "-", "+"};
 
     private String opChar;
     private int operatorIndex;
     private int operatorPriority;
     private int indexInEquation;
-    private int colorCode;
 
     //sets a priority to each operand
     public Operator(){
         Random random = new Random();
         operatorIndex = random.nextInt(5);
-        opChar = operands[operatorIndex];
+        opChar = operators[operatorIndex];
         if(operatorIndex <3){
             operatorPriority = 3;
         } else {
@@ -33,9 +32,16 @@ public class Operator implements Comparable<Operator>{
         indexInEquation = index;
     }
     
-    public Operator(String op, int index){
+    public Operator(String opChar, int index){
         this(index);
-        opChar = op;
+        this.opChar = opChar;
+    }
+
+    public Operator(Operator op){
+        opChar = op.opChar;
+        operatorIndex = op.operatorIndex;
+        operatorPriority = op.operatorPriority;
+        indexInEquation = op.indexInEquation;
     }
 
     public String getOperatorChar(){
