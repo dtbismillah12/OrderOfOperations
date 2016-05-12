@@ -17,7 +17,9 @@ public class Spaceship {
     private RectF rect;
 
     // The player ship will be represented by a Bitmap
-    private Bitmap bitmap;
+    private Bitmap goodShipBitmap;
+    private Bitmap damagedShipBitmap;
+    private Bitmap damagedShipBitmap2;
 
     // How long and high our paddle will be
     private float length;
@@ -48,10 +50,20 @@ public class Spaceship {
         y = screenY - (2*height);
         this.context = context;
         // Initialize the bitmap
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ship);
+        goodShipBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ship);
+        damagedShipBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.two_life_ship);
+        damagedShipBitmap2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.one_life_ship);
 
         // stretch the bitmap to a size appropriate for the screen resolution
-        bitmap = Bitmap.createScaledBitmap(bitmap,
+        goodShipBitmap = Bitmap.createScaledBitmap(goodShipBitmap,
+                (int) (length),
+                (int) (height),
+                false);
+        damagedShipBitmap = Bitmap.createScaledBitmap(damagedShipBitmap,
+                (int) (length),
+                (int) (height),
+                false);
+        damagedShipBitmap2 = Bitmap.createScaledBitmap(damagedShipBitmap2,
                 (int) (length),
                 (int) (height),
                 false);
@@ -68,8 +80,14 @@ public class Spaceship {
 
     // This is a getter method to make the rectangle that
     // defines our paddle available in BreakoutView class
-    public Bitmap getBitmap(){
-        return bitmap;
+    public Bitmap getBitmap(int lives){
+        if(lives == 3) {
+            return goodShipBitmap;
+        } else if (lives == 2) {
+            return damagedShipBitmap;
+        } else {
+            return damagedShipBitmap2;
+        }
     }
 
     public float getX(){
@@ -111,19 +129,4 @@ public class Spaceship {
     public void updateShipSpeed(float accelX){
         shipSpeed = (accelX*frameTime);
     }
-
-    public void destroyShip(int lives){
-        if(lives == 2) {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.two_life_ship);
-        } else if (lives == 1) {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.one_life_ship);
-        }
-        //TODO: Move all "heavy" bitmap operations to startup.
-        // stretch the bitmap to a size appropriate for the screen resolution
-        bitmap = Bitmap.createScaledBitmap(bitmap,
-                (int) (length),
-                (int) (height),
-                false);
-    }
-
 }

@@ -134,7 +134,7 @@ public class MissionView extends SurfaceView implements Runnable{
         // How kind.
         super(context);
 
-        currentLevel = 1;
+        currentLevel = 15;
 
         // Make a globally available copy of the context so we can use it in another method
         this.context = context;
@@ -278,7 +278,7 @@ public class MissionView extends SurfaceView implements Runnable{
 
 
             canvas.drawBitmap(background, 0, 0, paint);
-            canvas.drawBitmap(playerShip.getBitmap(), playerShip.getX(), playerShip.getY(), paint);
+            canvas.drawBitmap(playerShip.getBitmap(lives), playerShip.getX(), playerShip.getY(), paint);
             canvas.drawBitmap(feedbackBox, screenWidth - 70, screenHeight - 87, paint);
 
             paint.setColor(Color.argb(255, 249, 129, 0));
@@ -374,7 +374,6 @@ public class MissionView extends SurfaceView implements Runnable{
         if (RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
             invadersBullets[i].setInactive();
             lives --;
-            playerShip.destroyShip(lives);
 
             // Is it game over?
             if(lives == 0){
@@ -401,9 +400,6 @@ public class MissionView extends SurfaceView implements Runnable{
                 if (invaders[i].getX() > screenWidth - invaders[i].getLength()
                         || invaders[i].getX() < 0){
                     invadersClosing();
-                }
-                if(currentLevel>15){
-                    invaders[i].increaseChanceOfFire(2);
                 }
             }
             if (invaders[i].getY() > screenHeight - screenHeight / 10) {
@@ -481,7 +477,6 @@ public class MissionView extends SurfaceView implements Runnable{
                 ast.setInvisible();
                 asteroids.remove(i);
                 lives--;
-                playerShip.destroyShip(lives);
 
                 if(lives==0){
                     playerLost();
