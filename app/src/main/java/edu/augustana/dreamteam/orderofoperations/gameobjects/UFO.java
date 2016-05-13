@@ -14,7 +14,6 @@ import java.util.Random;
  */
 public class UFO {
     RectF rect;
-
     Random generator = new Random();
 
     // The player ship will be represented by a Bitmap
@@ -42,6 +41,13 @@ public class UFO {
 
     private boolean isVisible;
 
+    /*
+    Constructor for UFO
+    @param: context gives context of the activity
+    @param: column the integer column in the grid to draw the UFO
+    @param: screenX width of the screen
+    @param: screenY height of the screen
+     */
     public UFO (Context context, int column, int screenX, int screenY) {
 
         // Initialize a blank RectF
