@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
+import edu.augustana.dreamteam.orderofoperations.gameobjects.EquationTerm;
+
 /**
  * Created by jeffreyprior on 4/13/16.
  */
@@ -13,11 +15,11 @@ public class Equation {
     private final char[] possibleOperators = {'%', '/', '*', '-', '+'};
 
     private Random rand;
-    private StringBuilder equation;
     private boolean containsParentheses;
     private int numOfOperators;
     private Queue<Operator> operatorOrder;
     private ArrayList<Operator> operators;
+    private ArrayList<EquationTerm> terms;
 
     //TODO: get the game logic stuff out (and into gameArena)
     //   Equation should think in terms of number of operators / complexity (contains parens?)
@@ -26,11 +28,11 @@ public class Equation {
 
     public Equation(){
         rand = new Random();
-        equation = new StringBuilder();
         containsParentheses = false;
         numOfOperators = 2;
         operatorOrder = new LinkedList<Operator>();
         operators = new ArrayList<Operator>();
+        terms = new ArrayList<EquationTerm>();
     }
 
     //sets the number of operators given in the equation depending how far the player has gotten in the game
@@ -46,32 +48,23 @@ public class Equation {
         createProperOperatorOrder();
     }
 
-    public StringBuilder getEquation(){
-        return equation;
-    }
-
-    public boolean isOperator(int index){
-        for(int i = 0; i < possibleOperators.length; i++){
-            if(equation.charAt(index) == possibleOperators[i]){
-                return true;
-            }
-        }
-        return false;
+    public ArrayList<EquationTerm> getEquation(){
+        return terms;
     }
 
     public String toString(){
         StringBuilder spacedEquation = new StringBuilder();
-        for(int i = 0; i<equation.length(); i++){
-            spacedEquation.append(equation.charAt(i));
+        for(int i = 0; i<terms.size(); i++){
+            spacedEquation.append(terms.get(i).getTerm());
             spacedEquation.append(" ");
         }
         return spacedEquation.toString();
     }
 
     private void constructEquation(){
-        equation.append(rand.nextInt(10));
-        for(int i = 1; i<= numOfOperators; i++){
-            addTerm(i-1);
+        int termsInEquation = (numOfOperators*2)+ 1;
+        for(int i = 0; i < termsInEquation; i++){
+            addTerm(i);
         }
         if(containsParentheses){
             addParentheses();
@@ -79,10 +72,15 @@ public class Equation {
     }
 
     private void addTerm(int index){
-        Operator genOperator = new Operator(index);
-        operators.add(genOperator);
-        equation.append(genOperator.getOperatorChar());
-        equation.append(rand.nextInt(10));
+        boolean isOperator = false;
+        if(index % 2 != 0){
+            isOperator = true;
+        }
+        EquationTerm term = new EquationTerm(isOperator, rand, index/2);
+        if(isOperator){
+            operators.add(term.getOperator());
+        }
+        terms.add(term);
     }
 
     private void addParentheses(){
@@ -93,8 +91,8 @@ public class Equation {
         if(possibleCloseIndexes.length-indexOfOpen-1 != 0){
             indexOfClose += rand.nextInt(possibleCloseIndexes.length-indexOfOpen-1);
         }
-        equation.insert(possibleOpenIndexes[indexOfOpen], "(");
-        equation.insert(possibleCloseIndexes[indexOfClose], ")");
+        terms.add(possibleOpenIndexes[indexOfOpen], new EquationTerm("("));
+        terms.add(possibleCloseIndexes[indexOfClose], new EquationTerm(")"));
 
         for(int i = possibleOpenIndexes[indexOfOpen]/2; i<(possibleCloseIndexes[indexOfClose]/2)-1; i++){
             operators.get(i).operatorInParentheses();
@@ -131,6 +129,18 @@ public class Equation {
 
     public boolean correctEquation(){
         return operatorOrder.isEmpty();
+    }
+
+    public Operator getAnOperator(){
+        if(operatorOrder.size()>1){
+            return operators.get(rand.nextInt(operators.size()));
+        } else {
+            if(rand.nextInt(5)==0){
+                return operatorOrder.peek();
+            } else {
+                return new Operator(String.valueOf(possibleOperators[rand.nextInt(5)]),rand.nextInt(5));
+            }
+        }
     }
 
     public ArrayList<Operator> getOperators(){

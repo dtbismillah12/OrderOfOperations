@@ -40,8 +40,7 @@ public class UFO {
     // Is the ship moving and in which direction
     private int shipMoving = RIGHT;
 
-    boolean isVisible;
-
+    private boolean isVisible;
 
     public UFO (Context context, int column, int screenX, int screenY) {
 
@@ -140,7 +139,7 @@ public class UFO {
         // If near the player
         if((playerShipX + playerShipLength > x && playerShipX + playerShipLength < x + length) ||
                 (playerShipX > x && playerShipX < x + length)) {
-            if(generator.nextInt(20) == 0) {
+            if(generator.nextInt(30) == 0) {
                 return true;
             }
         } else {

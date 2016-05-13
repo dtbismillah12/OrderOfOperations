@@ -48,13 +48,13 @@ public class Asteroid {
      * @param screenX is the width of the screen
      * @param screenY is the height of the screen
      */
-    public Asteroid(Context context, int screenX, int screenY, int numOperators){
+    public Asteroid(Context context, int screenX, int screenY, int numOperators, Operator op){
         rand = new Random();
 
         isVisible = true;
 
         //Initialize Operator Generator
-        myOperator = new Operator(rand.nextInt(numOperators));
+        myOperator = op;
 
         // Initialize a blank RectF
         rect = new RectF();
