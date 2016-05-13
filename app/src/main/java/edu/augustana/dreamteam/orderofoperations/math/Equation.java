@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-import edu.augustana.dreamteam.orderofoperations.gameobjects.EquationTerm;
-
 /**
  * Created by jeffreyprior on 4/13/16.
  */
@@ -17,15 +15,13 @@ public class Equation {
     private Random rand;
     private boolean containsParentheses;
     private int numOfOperators;
-    private Queue<Operator> operatorOrder;
-    private ArrayList<Operator> operators;
-    private ArrayList<EquationTerm> terms;
+    private Queue<Operator> operatorOrder; // Queue representation of correct operator order
+    private ArrayList<Operator> operators; // All operators added to the equation
+    private ArrayList<EquationTerm> terms; // All terms within the equation (includes integers)
 
-    //TODO: get the game logic stuff out (and into gameArena)
-    //   Equation should think in terms of number of operators / complexity (contains parens?)
-    //   Equation should provide methods for getting THE correct operation, or an incorrect
-    //    operation (which may or may not be in the equation at all).
-
+    /**
+     * Initializes a simple equation with two operators and without parentheses
+     */
     public Equation(){
         rand = new Random();
         containsParentheses = false;
@@ -35,9 +31,11 @@ public class Equation {
         terms = new ArrayList<EquationTerm>();
     }
 
-    //sets the number of operators given in the equation depending how far the player has gotten in the game
-    //if they have advanced at least ten rounds, parentheses will randomly be thrown into the equation
-    // @param: levelsPassed gives how many rounds the player has passed
+    /**
+     * Initializes an equation with a specified number of operators in it and adds parentheses
+     * only if the number of operators is more than 3 (complexity of difficulty in game)
+     * @param numOfOperators the integer value for how many operators will be in equation
+     */
     public Equation(int numOfOperators){
         this();
         this.numOfOperators = numOfOperators;
@@ -48,19 +46,10 @@ public class Equation {
         createProperOperatorOrder();
     }
 
-    public ArrayList<EquationTerm> getEquation(){
-        return terms;
-    }
-
-    public String toString(){
-        StringBuilder spacedEquation = new StringBuilder();
-        for(int i = 0; i<terms.size(); i++){
-            spacedEquation.append(terms.get(i).getTerm());
-            spacedEquation.append(" ");
-        }
-        return spacedEquation.toString();
-    }
-
+    /**
+     * Constructs the equation by adding terms until the number of terms in the equation is correct
+     * Should be one more integer value than operators so total terms is operators * 2 + 1
+     */
     private void constructEquation(){
         int termsInEquation = (numOfOperators*2)+ 1;
         for(int i = 0; i < termsInEquation; i++){
@@ -71,6 +60,11 @@ public class Equation {
         }
     }
 
+    /**
+     * Adds a single term to the equation (if odd index in the total equation then an operator so
+     * numbers and operators alternate)
+     * @param index integer for the index in the complete equation
+     */
     private void addTerm(int index){
         boolean isOperator = false;
         if(index % 2 != 0){
@@ -83,6 +77,10 @@ public class Equation {
         terms.add(term);
     }
 
+    /**
+     * Adds the parentheses into the equation at the proper possible locations while increasing
+     * the priority of operators within the parentheses
+     */
     private void addParentheses(){
         int[] possibleOpenIndexes = {0,2,4,6};
         int[] possibleCloseIndexes = {4,6,8,10};
@@ -99,6 +97,12 @@ public class Equation {
         }
     }
 
+    /**
+     * Checks if the operator passed in is the next operator in the proper order of operators for
+     * the equation and if so removes from the Queue
+     * @param other Operator that is being checked
+     * @return boolean for whether or not the operator is the next one to be operated
+     */
     public boolean isCorrectOperator(Operator other){
         if(operatorOrder.peek().equals(other)){
             operatorOrder.poll().makeInactive();
@@ -108,6 +112,19 @@ public class Equation {
         }
     }
 
+    /**
+     * Checks if the operator queue is empty meaning that all operators have been selected in the
+     * proper order
+     * @return boolean for whether or not equation has been completed
+     */
+    public boolean correctEquation(){
+        return operatorOrder.isEmpty();
+    }
+
+    /**
+     * Sorts the ArrayList of operators to create the proper order that operators should be selected
+     * in based on the Operator priority
+     */
     private void createProperOperatorOrder(){
         ArrayList<Operator> orderedList = operators;
         Collections.sort(orderedList);
@@ -116,6 +133,10 @@ public class Equation {
         }
     }
 
+    /**
+     * For testing prints out the correct order of operators
+     * @return a String of the correct order of operators along with their index in equation
+     */
     public String properOrderString(){
         StringBuilder properOrder = new StringBuilder();
         while(!operatorOrder.isEmpty()){
@@ -127,10 +148,11 @@ public class Equation {
         return properOrder.toString();
     }
 
-    public boolean correctEquation(){
-        return operatorOrder.isEmpty();
-    }
-
+    /**
+     * Gives an operator for a possible operator in the equation if the user has more than one left
+     * to guess and then a one in four chance of correct operator with one left in equation
+     * @return Operator object that could be in equation or not
+     */
     public Operator getAnOperator(){
         if(operatorOrder.size()>1){
             return operators.get(rand.nextInt(operators.size()));
@@ -143,7 +165,32 @@ public class Equation {
         }
     }
 
+    /**
+     * Access to the ArrayList for all operators in equation
+     * @return ArrayList for all operators
+     */
     public ArrayList<Operator> getOperators(){
         return operators;
+    }
+
+    /**
+     * Access to the full equation in ArrayList representation
+     * @return an ArrayList for the equation including numbers and operators
+     */
+    public ArrayList<EquationTerm> getEquation(){
+        return terms;
+    }
+
+    /**
+     * Creates a spaced String representation of equation
+     * @return a String for the equation
+     */
+    public String toString(){
+        StringBuilder spacedEquation = new StringBuilder();
+        for(int i = 0; i<terms.size(); i++){
+            spacedEquation.append(terms.get(i).getTerm());
+            spacedEquation.append(" ");
+        }
+        return spacedEquation.toString();
     }
 }

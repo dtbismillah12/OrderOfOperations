@@ -15,7 +15,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import edu.augustana.dreamteam.orderofoperations.math.Equation;
+import edu.augustana.dreamteam.orderofoperations.math.*;
 import edu.augustana.dreamteam.orderofoperations.gameobjects.*;
 import edu.augustana.dreamteam.orderofoperations.R;
 
