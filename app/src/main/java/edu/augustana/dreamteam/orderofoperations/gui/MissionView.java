@@ -69,6 +69,9 @@ public class MissionView extends SurfaceView implements Runnable{
     private int numOperators; // Number of operators to be in equation
     private Equation equation;
 
+    /*
+    Constructor for MissionView
+    */
     public MissionView(Context context, int x, int y) {
         super(context);
 
@@ -191,6 +194,9 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Builds white barriers near bottom of screen for player to hide behind
+     */
     private void buildBarriers(){
         numBricks = 0;
         for(int shelterNumber = 0; shelterNumber < 4; shelterNumber++){
@@ -203,18 +209,28 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Adds UFOs to the screen
+     */
     private void addInvaders(){
         for(int i = 0; i < invaders.length; i++){
             invaders[i] = new UFO(context, i, screenWidth, screenHeight -(screenHeight /10));
         }
     }
 
+    /*
+    Creates the bullets the UFOs are firing
+     */
     private void addInvaderBullets(){
         for(int i = 0; i<invadersBullets.length; i++){
             invadersBullets[i] = new Blaster(screenHeight);
         }
     }
 
+    /*
+    Creates Asteroids which contain the operators in the expression
+    and drop down at a slow rate.
+     */
     private void addAsteroids(){
         long timeDiff = System.currentTimeMillis() - startTime;
         if(timeDiff > 3000 && asteroids.size() <= 3){
@@ -224,10 +240,18 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Allows the player to move by tilting the screen
+    @param xAccel: the rate of horizontal acceleration the player can move with
+     */
     public void updateShipMovement(float xAccel){
         playerShip.updateShipSpeed(-1 * xAccel);
     }
 
+    /*
+    Checks if individual bullets have hit anything or gone off the screen.
+    If so, they are set inactive.
+     */
     private void updateInvaderBullets(){
         for(int i = 0; i < invadersBullets.length; i++){
             if(invadersBullets[i].getImpactPointY() > screenHeight){
@@ -243,6 +267,10 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Makes sure to keep the UFOs going across the screen, turns them around if they bump the edge,
+    and prepares the invaders to shoot.
+     */
     private void updateInvaders(){
         for(int i = 0; i < invaders.length; i++){
             if(invaders[i].isAlive()) {
@@ -263,12 +291,19 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Turns the UFOs around and moves them down a row if they have
+    bumped the edge of the screen
+     */
     private void invadersClosing(){
         for(int i = 0; i<invaders.length; i++){
             invaders[i].dropDownAndReverse();
         }
     }
 
+    /*
+    Checks if the player's bullets have hit anything
+     */
     private void updatePlayerBullets(){
         for(int j = 0; j < playerBullets.size(); j++) {
             if (playerBullets.get(j).getStatus()) {
@@ -285,6 +320,10 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Removes asteroids if they have gone off the screen and whether they
+    have hit the player.
+     */
     private void updateAsteroids() {
         for(int i = 0; i < asteroids.size(); i++) {
             asteroids.get(i).update(fps);
@@ -295,6 +334,10 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Checks if the UFO bullets have hit the bottom barriers and subtracts
+    bricks where the barrier has been shot.
+     */
     private void checkInvaderHitBricks(int i){
         for(int j = 0; j < numBricks; j++){
             if(bricks[j].isAlive()){
@@ -306,6 +349,10 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Checks if invader has shot player.
+    If so, decreases the player's lives by 1.
+     */
     private void checkInvaderHitPlayer(int i){
         if (RectF.intersects(playerShip.getRect(), invadersBullets[i].getRect())){
             invadersBullets[i].setInactive();
@@ -316,6 +363,10 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Checks if the player has shot an invader.
+    If so, it removes the invader and adds 10 to the player's score.
+     */
     private void checkPlayerHitInvader(int j){
         for (int i = 0; i < invaders.length; i++) {
             if (invaders[i].isAlive()) {
@@ -329,6 +380,10 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Checks if the player's bullets have hit the barrier and sets the shot
+    bricks invisible.
+     */
     private void checkPlayerHitBricks(int j){
         for (int i = 0; i < numBricks; i++) {
             if (bricks[i].isAlive()) {
@@ -341,6 +396,13 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Checks if the Player's bullet has hit an asteroid and removes it.
+    It then increases the player's score by 50 if correct.
+    It subtracts 50 if incorrect.
+    Immediate feedback about correct/incorrect is given by setting the
+    feedback button to red(wrong) or green(right).
+     */
     private void checkPlayerHitAsteroids(int j){
         for(int i = 0; i < asteroids.size(); i++){
             if (asteroids.get(i).isVisible()) {
@@ -362,6 +424,10 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Checks if the player has been hit by an oncoming asteroid
+    and reduces lives remaining if so.
+    */
     private void checkAsteroidHitPlayer(int i){
         if (asteroids.get(i).isVisible()) {
             Asteroid ast = asteroids.get(i);
@@ -376,6 +442,9 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Draws the UFOs to the screen.
+    */
     private void drawInvaders(){
         for(int i = 0; i < invaders.length; i++) {
             if (invaders[i].isAlive()) {
@@ -384,6 +453,9 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Draws the blocks of barriers on the screen.
+    */
     private void drawBricks(){
         for(int i = 0; i < numBricks; i++){
             if(bricks[i].isAlive()) {
@@ -392,6 +464,9 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Draws the player's bullets on the screen.
+    */
     private void drawPlayBullets() {
         for(int i = 0; i<playerBullets.size(); i++){
             if (playerBullets.get(i).getStatus()) {
@@ -400,6 +475,9 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Draws the UFO bullets on the screen.
+     */
     private void drawInvadBullets(){
         for(int i = 0; i < invadersBullets.length; i++){
             if(invadersBullets[i].getStatus()) {
@@ -408,6 +486,9 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Draws the Asteroids to the screen
+     */
     private void drawAsteroids() {
         for(int i = 0; i < asteroids.size(); i++) {
             Asteroid ast = asteroids.get(i);
@@ -419,6 +500,9 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
+    /*
+    Draws the expression to the top of the screen
+     */
     private void drawEquationText(){
         paint.setTextSize(40);
         ArrayList<EquationTerm> equationTerms = equation.getEquation();
@@ -434,13 +518,20 @@ public class MissionView extends SurfaceView implements Runnable{
         }
     }
 
-    private void drawGameInfoText(){
+    /*
+    Draws the Score, number of lives remaining, and
+    the current level to the top of the screen.
+     */
+    private void drawGameInfoText() {
         paint.setColor(Color.argb(255, 68, 6, 117)); // Setting brush color to purple
         paint.setTextSize(35);
         canvas.drawText("Score: " + score + "   Lives: " + lives + "  Level: " + currentLevel, 20, screenHeight - 45, paint);
     }
 
-    private void playerWon(){
+    /*
+    If the player wins, prepares the next level.
+     */
+    private void playerWon() {
         paused = true;
         prepareLevel(currentLevel);
     }
@@ -448,7 +539,7 @@ public class MissionView extends SurfaceView implements Runnable{
     /*
     Launches the Score screen and initializes high scores to zero if the game has never been
     played before on the specific device.
- */
+    */
     private void playerLost(){
         paused = true;
 
@@ -481,8 +572,9 @@ public class MissionView extends SurfaceView implements Runnable{
         editor.apply();
     }
 
-    // If SpaceInvadersActivity is paused/stopped
-    // shutdown our thread.
+    /*
+    If SpaceInvadersActivity is paused/stopped shutdown our thread.
+     */
     public void pause() {
         playing = false;
         try {
@@ -493,16 +585,18 @@ public class MissionView extends SurfaceView implements Runnable{
 
     }
 
-    // If SpaceInvadersActivity is started then
-    // start our thread.
+    /*
+     If SpaceInvadersActivity is started then start our thread.
+     */
     public void resume() {
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    // The SurfaceView class implements onTouchListener
-    // So we can override this method and detect screen touches.
+    /*
+    Allows player to shoot multiple bullets at once.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         paused = false;
