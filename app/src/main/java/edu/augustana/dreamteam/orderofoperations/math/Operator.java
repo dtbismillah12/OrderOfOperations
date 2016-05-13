@@ -44,18 +44,6 @@ public class Operator implements Comparable<Operator>{
         indexInEquation = op.indexInEquation;
     }
 
-    public Operator(String opChar, int index){
-        this(index);
-        this.opChar = opChar;
-    }
-
-    public Operator(Operator op){
-        opChar = op.opChar;
-        operatorIndex = op.operatorIndex;
-        operatorPriority = op.operatorPriority;
-        indexInEquation = op.indexInEquation;
-    }
-
     public String getOperatorChar(){
         return opChar;
     }
