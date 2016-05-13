@@ -1,3 +1,4 @@
+
 package edu.augustana.dreamteam.orderofoperations.gameobjects;
 
 import android.content.Context;
@@ -12,8 +13,8 @@ import edu.augustana.dreamteam.orderofoperations.math.Equation;
  */
 
 public class GameArena {
-    private Spaceship playerShip;
-    private ArrayList<Blaster> playerBullets;
-    private ArrayList<Asteroid> asteroids;
+        private Spaceship playerShip;
+        private ArrayList<Blaster> playerBullets;
+        private ArrayList<Asteroid> asteroids;
 
 }

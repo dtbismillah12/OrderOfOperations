@@ -36,7 +36,8 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@null"
             android:src="@drawable/start_btn"
-            android:layout_marginBottom="50dp" />
+            android:layout_marginBottom="50dp"
+            android:paddingBottom="100dp" />
 
         <ImageView
             android:layout_width="243dp"
@@ -46,5 +47,15 @@
             android:src="@drawable/title"
             android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="100dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/infoButton"
+            android:background="@null"
+            android:src="@drawable/infobutton"
+            android:layout_gravity="right|bottom"
+            android:paddingBottom="50dp"
+            android:paddingRight="50dp" />
     </FrameLayout>
 </RelativeLayout>

@@ -14,10 +14,11 @@
         completions."
     </string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_start_screen">StartScreen</string>
+    <string name="title_activity_start_screen">Mission OoO</string>
     <string name="score_activity_screen">ScoreScreen</string>
     <string name="action_settings">Settings</string>
     <string name="topScore1">1st Place: </string>
     <string name="topScore2">2nd Place: </string>
     <string name="topScore3">3rd Place: </string>
+    <string name="yourScore">Your Score: </string>
 </resources>

@@ -61,7 +61,7 @@
             android:layout_gravity="left|center_vertical"
             android:textSize="30dp"
             android:textColor="#ffffff"
-            android:paddingTop="150dp"
+            android:paddingTop="450dp"
             android:paddingLeft="50dp" />
 
         <TextView
@@ -72,7 +72,7 @@
             android:layout_gravity="left|center_vertical"
             android:textColor="#ffffff"
             android:textSize="30dp"
-            android:paddingTop="90dp"
+            android:paddingTop="300dp"
             android:paddingLeft="50dp" />
 
         <TextView
@@ -83,8 +83,18 @@
             android:layout_gravity="left|center_vertical"
             android:textSize="30dp"
             android:textColor="#ffffff"
-            android:paddingTop="30dp"
+            android:paddingTop="150dp"
             android:paddingLeft="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/yourScore"
+            android:id="@+id/playerScore"
+            android:layout_gravity="center"
+            android:textColor="#2980cd"
+            android:textSize="50dp"
+            android:textStyle="bold" />
 
         <!--<ImageButton-->
             <!--android:layout_width="wrap_content"-->
