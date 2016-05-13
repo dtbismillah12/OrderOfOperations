@@ -99,10 +99,6 @@ public class UFO {
         return bitmap1;
     }
 
-    public Bitmap getBitmap2(){
-        return bitmap2;
-    }
-
     public float getX(){
         return x;
     }
@@ -115,6 +111,9 @@ public class UFO {
         return length;
     }
 
+    /*
+    Moves the bounding box where the UFO can be hit as the UFO moves.
+     */
     public void update(long fps){
         if(shipMoving == LEFT){
             x = x - shipSpeed / fps;
@@ -132,6 +131,10 @@ public class UFO {
 
     }
 
+    /*
+    Has the UFOs drop a row and reverse direction
+    if they hit the edge of the screen
+     */
     public void dropDownAndReverse(){
         if(shipMoving == LEFT){
             shipMoving = RIGHT;
@@ -141,6 +144,10 @@ public class UFO {
         y = y + height;
     }
 
+    /*
+    Prepares the UFO to fire if playerShip is in range
+    @return: boolean true or false.
+     */
     public boolean takeAim(float playerShipX, float playerShipLength){
         // If near the player
         if((playerShipX + playerShipLength > x && playerShipX + playerShipLength < x + length) ||

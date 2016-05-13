@@ -1,45 +1,31 @@
 package edu.augustana.dreamteam.orderofoperations.gui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import edu.augustana.dreamteam.orderofoperations.R;
-
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 
 public class ScoreScreen extends MainActivity{
     private SharedPreferences sharedPref2;
+    private SharedPreferences.Editor editor;
     private ImageView background;
     private ImageButton restartBTN;
-    private ImageButton endBTN;
-    private Canvas canvas;
-    private Paint paint;
     private Context context;
     FrameLayout endScreen;
-    private SurfaceHolder holder;
-    private int[] highScores;
-    private SharedPreferences.Editor editor;
 
     private TextView highScore1;
     private TextView highScore2;
@@ -90,7 +76,6 @@ public class ScoreScreen extends MainActivity{
         //get player's final score from extras in intent
         Intent scoreIntent = getIntent();
         int finScore = scoreIntent.getIntExtra("score", 0);
-        int screenHeight = scoreIntent.getIntExtra("screenHeight", 0);
 
         //retrieve top 3 scores
         sharedPref2 = context.getSharedPreferences("sharedPref", MODE_PRIVATE);
@@ -120,7 +105,7 @@ public class ScoreScreen extends MainActivity{
 
         editor = sharedPref2.edit();
 
-        //is final score greater than first place score?
+        //is final score greater than first place score? If so, save it into high scores
         if(finScore > intHighScores.get(2)) {
             Toast.makeText(getApplicationContext(), "NEW HIGH SCORE!", Toast.LENGTH_LONG).show();
             editor.putString("first", Integer.toString(finScore));
@@ -134,7 +119,7 @@ public class ScoreScreen extends MainActivity{
             highScore3.setText("3rd Place: " + secondPlace);
         }
 
-        //is final score greater than second place?
+        //is final score greater than second place? If so, save it into high scores
         else if (finScore > intHighScores.get(1)) {
             Toast.makeText(getApplicationContext(), "NEW HIGH SCORE!", Toast.LENGTH_LONG).show();
             editor.putString("first", firstPlace);
@@ -148,7 +133,7 @@ public class ScoreScreen extends MainActivity{
             highScore3.setText("3rd Place: " + secondPlace);
         }
 
-        //is final score greater than third place?
+        //is final score greater than third place? If so, save it into high scores
         else if (finScore > intHighScores.get(0)) {
             Toast.makeText(getApplicationContext(), "NEW HIGH SCORE!", Toast.LENGTH_LONG).show();
             editor.putString("first", firstPlace);

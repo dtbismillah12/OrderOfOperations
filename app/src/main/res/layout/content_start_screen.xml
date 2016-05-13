@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
+        android:orientation="vertical"
         android:layout_centerHorizontal="true">
 
         <ImageView
@@ -57,5 +58,11 @@
             android:layout_gravity="right|bottom"
             android:paddingBottom="50dp"
             android:paddingRight="50dp" />
+
+        <TextView android:id="@+id/codeAcademy"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textColor="#25126193"
+            />
     </FrameLayout>
 </RelativeLayout>
