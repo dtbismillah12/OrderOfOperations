@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
-
 import edu.augustana.dreamteam.orderofoperations.R;
 
 /**
@@ -37,6 +36,12 @@ public class Spaceship {
     private Context context;
     private int screenWidth;
 
+    /*
+    Constructor for the Spaceship (the player's ship)
+    @param context: Context from the main activity
+    @param screenX: the width of the screen
+    @param screenY: the height of the screen
+     */
     public Spaceship(Context context, int screenX, int screenY){
 
         // Initialize a blank RectF
@@ -78,8 +83,10 @@ public class Spaceship {
         return rect;
     }
 
-    // This is a getter method to make the rectangle that
-    // defines our paddle available in BreakoutView class
+    /*
+    This is a getter method to make the rectangle that
+    defines our paddle available in BreakoutView class
+     */
     public Bitmap getBitmap(int lives){
         if(lives == 3) {
             return goodShipBitmap;
@@ -106,9 +113,11 @@ public class Spaceship {
         return height;
     }
 
-    // This update method will be called from update in MissionView
-    // It determines if the player ship needs to move and changes the coordinates
-    // contained in x if necessary
+    /*
+    This update method will be called from update in MissionView
+    It determines if the player ship needs to move and changes the coordinates
+    contained in x if necessary
+     */
     public void update(){
         x += shipSpeed;
 
@@ -123,9 +132,11 @@ public class Spaceship {
         rect.bottom = y + height;
         rect.left = x;
         rect.right = x + length;
-
     }
 
+    /*
+    Adjusts the speed at which the playership is moving.
+     */
     public void updateShipSpeed(float accelX){
         shipSpeed = (accelX*frameTime);
     }
