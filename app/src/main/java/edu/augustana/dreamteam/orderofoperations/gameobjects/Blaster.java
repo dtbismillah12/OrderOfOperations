@@ -24,6 +24,9 @@ public class Blaster {
 
     private boolean isActive;
 
+    /*
+    Constructor for the Blaster class
+     */
     public Blaster(int screenY) {
 
         height = screenY / 20;
@@ -40,12 +43,18 @@ public class Blaster {
         return isActive;
     }
 
+    /*
+    Sets the gun inactive
+     */
     public void setInactive(){
         isActive = false;
         x = 0;
         y = 0;
     }
 
+    /*
+    Returns the y point at which the bullet made impact with an object
+     */
     public float getImpactPointY(){
         if (heading == DOWN){
             return y + height;
@@ -54,6 +63,10 @@ public class Blaster {
         }
     }
 
+    /*
+    This method shoots a bullet from either the UFO or player
+    @return: true if bullet is fired or false if bullet already active
+     */
     public boolean shoot(float startX, float startY, int direction) {
         if (!isActive) {
             x = startX;
@@ -67,6 +80,9 @@ public class Blaster {
         return false;
     }
 
+    /*
+    Moves the bounding box of the bullet as it is moving.
+     */
     public void update(long fps){
 
         // Just move up or down
